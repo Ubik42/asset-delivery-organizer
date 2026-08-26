@@ -1,0 +1,19 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 8,
+  "checkpoint": 7,
+  "completedSlice": "M1-S6",
+  "evidence": [
+    "docs/RELEASE_AUDIT_2026-08-25.md maps every original requirement and explicit non-goal to authoritative code and verification evidence",
+    "The final fixed gate passed 56 tests plus goal, contract, capability and Ruff checks",
+    "A wheel built and installed into a fresh Python 3.14.3 virtual environment",
+    "The fresh installed CLI audited four files and produced three expected rule issues in a strict art-delivery-audit-report/1 artifact",
+    "Fresh-environment input hash, size and mtime snapshots were identical before and after the CLI run",
+    "The final wheel runtime requirement list contains only pydantic; no sibling-repository or DCC imports or absolute paths exist",
+    "Both checked-in delivery schemas parsed equal to the current Art Pipeline Skill exports on 2026-08-25",
+    "Future mutation work was removed from the active goal and remains an explicitly unauthorized roadmap candidate"
+  ],
+  "unresolvedRisks": [],
+  "nextSlice": null
+}

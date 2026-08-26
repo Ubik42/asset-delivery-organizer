@@ -1,0 +1,517 @@
+{
+  "$defs": {
+    "AuditSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "blocker_count": {
+          "minimum": 0,
+          "title": "Blocker Count",
+          "type": "integer"
+        },
+        "error_count": {
+          "minimum": 0,
+          "title": "Error Count",
+          "type": "integer"
+        },
+        "file_count": {
+          "minimum": 0,
+          "title": "File Count",
+          "type": "integer"
+        },
+        "issue_count": {
+          "minimum": 0,
+          "title": "Issue Count",
+          "type": "integer"
+        },
+        "warning_count": {
+          "minimum": 0,
+          "title": "Warning Count",
+          "type": "integer"
+        },
+        "write_count": {
+          "const": 0,
+          "default": 0,
+          "title": "Write Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "file_count",
+        "issue_count",
+        "blocker_count",
+        "error_count",
+        "warning_count"
+      ],
+      "title": "AuditSummary",
+      "type": "object"
+    },
+    "DeliveryFileFact": {
+      "additionalProperties": false,
+      "properties": {
+        "media_type": {
+          "maxLength": 120,
+          "minLength": 3,
+          "title": "Media Type",
+          "type": "string"
+        },
+        "modified_at": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Modified At"
+        },
+        "parsed_tokens": {
+          "additionalProperties": {
+            "type": "string"
+          },
+          "title": "Parsed Tokens",
+          "type": "object"
+        },
+        "relative_path": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "title": "Relative Path",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "relative_path",
+        "sha256",
+        "size_bytes",
+        "media_type"
+      ],
+      "title": "DeliveryFileFact",
+      "type": "object"
+    },
+    "DeliveryIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "affected_file": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "title": "Affected File",
+          "type": "string"
+        },
+        "auto_fix": {
+          "default": "none",
+          "enum": [
+            "none",
+            "plan_only"
+          ],
+          "title": "Auto Fix",
+          "type": "string"
+        },
+        "effective_parameters": {
+          "items": {
+            "$ref": "#/$defs/EffectiveParameter"
+          },
+          "minItems": 1,
+          "title": "Effective Parameters",
+          "type": "array"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/IssueEvidence"
+          },
+          "minItems": 1,
+          "title": "Evidence",
+          "type": "array"
+        },
+        "issue_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,159}$",
+          "title": "Issue Id",
+          "type": "string"
+        },
+        "message": {
+          "maxLength": 1000,
+          "minLength": 5,
+          "title": "Message",
+          "type": "string"
+        },
+        "remediation": {
+          "maxLength": 1000,
+          "minLength": 5,
+          "title": "Remediation",
+          "type": "string"
+        },
+        "rule_id": {
+          "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)+$",
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "rule_version": {
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "title": "Rule Version",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "info",
+            "warning",
+            "error",
+            "blocker"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "issue_id",
+        "rule_id",
+        "rule_version",
+        "severity",
+        "affected_file",
+        "evidence",
+        "effective_parameters",
+        "message",
+        "remediation"
+      ],
+      "title": "DeliveryIssue",
+      "type": "object"
+    },
+    "EffectiveParameter": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "pattern": "^[a-z][a-z0-9_.-]{1,79}$",
+          "title": "Name",
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/$defs/ParameterSource"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "name",
+        "value",
+        "source"
+      ],
+      "title": "EffectiveParameter",
+      "type": "object"
+    },
+    "IssueEvidence": {
+      "additionalProperties": false,
+      "properties": {
+        "detail": {
+          "maxLength": 1000,
+          "minLength": 5,
+          "title": "Detail",
+          "type": "string"
+        },
+        "expected": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Expected"
+        },
+        "field": {
+          "maxLength": 120,
+          "minLength": 1,
+          "title": "Field",
+          "type": "string"
+        },
+        "observed": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Observed"
+        }
+      },
+      "required": [
+        "field",
+        "observed",
+        "expected",
+        "detail"
+      ],
+      "title": "IssueEvidence",
+      "type": "object"
+    },
+    "ParameterSource": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "default",
+            "project_profile",
+            "asset_override"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "reference": {
+          "maxLength": 240,
+          "minLength": 1,
+          "title": "Reference",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "reference"
+      ],
+      "title": "ParameterSource",
+      "type": "object"
+    },
+    "ProfileRef": {
+      "additionalProperties": false,
+      "properties": {
+        "profile_id": {
+          "pattern": "^[a-z0-9][a-z0-9._-]{2,119}$",
+          "title": "Profile Id",
+          "type": "string"
+        },
+        "profile_version": {
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "title": "Profile Version",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        }
+      },
+      "required": [
+        "profile_id",
+        "profile_version",
+        "sha256"
+      ],
+      "title": "ProfileRef",
+      "type": "object"
+    },
+    "RuleRef": {
+      "additionalProperties": false,
+      "properties": {
+        "rule_id": {
+          "pattern": "^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)+$",
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "rule_version": {
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+          "title": "Rule Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule_id",
+        "rule_version"
+      ],
+      "title": "RuleRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "audit_id": {
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,159}$",
+      "title": "Audit Id",
+      "type": "string"
+    },
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "files": {
+      "items": {
+        "$ref": "#/$defs/DeliveryFileFact"
+      },
+      "title": "Files",
+      "type": "array"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/DeliveryIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "profile": {
+      "$ref": "#/$defs/ProfileRef"
+    },
+    "root_label": {
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9._-]{1,119}$",
+      "title": "Root Label",
+      "type": "string"
+    },
+    "rules_evaluated": {
+      "items": {
+        "$ref": "#/$defs/RuleRef"
+      },
+      "minItems": 1,
+      "title": "Rules Evaluated",
+      "type": "array"
+    },
+    "scanner_id": {
+      "pattern": "^[a-z][a-z0-9._-]{2,119}$",
+      "title": "Scanner Id",
+      "type": "string"
+    },
+    "scanner_version": {
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "title": "Scanner Version",
+      "type": "string"
+    },
+    "schema_id": {
+      "const": "art-delivery-audit-report/1",
+      "default": "art-delivery-audit-report/1",
+      "title": "Schema Id",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "summary": {
+      "$ref": "#/$defs/AuditSummary"
+    }
+  },
+  "required": [
+    "audit_id",
+    "root_label",
+    "profile",
+    "scanner_id",
+    "scanner_version",
+    "started_at",
+    "completed_at",
+    "rules_evaluated",
+    "files",
+    "issues",
+    "summary"
+  ],
+  "title": "DeliveryAuditReport",
+  "type": "object"
+}

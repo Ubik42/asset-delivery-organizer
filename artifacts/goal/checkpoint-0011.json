@@ -1,0 +1,20 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 12,
+  "checkpoint": 11,
+  "completedSlice": "M3-S1",
+  "evidence": [
+    "The installable PySide6 workbench provides four Chinese workflow panels for setup, file review, issue evidence and report export",
+    "Users can choose the delivery root, Profile and enabled rule subset without writing commands",
+    "The file ledger supports search, type/status filters, metadata and image/text preview",
+    "The issue ledger supports severity/rule filters and localized evidence/remediation",
+    "Qt smoke test verifies the full scan path and unchanged input SHA-256 values",
+    "70 tests, Ruff, goal/schema/capability/demo drift gates passed",
+    "All four production-like demo scenarios passed with ReadOnly=True",
+    "The 0.2.0 wheel was built and ado-ui help/entry point executed",
+    "Five real runtime screenshots cover setup, file preview, issue evidence, report summary and 1080x680 layout"
+  ],
+  "unresolvedRisks": [],
+  "nextSlice": null
+}

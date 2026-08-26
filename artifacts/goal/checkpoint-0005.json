@@ -1,0 +1,22 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 6,
+  "checkpoint": 5,
+  "completedSlice": "M1-S4",
+  "evidence": [
+    "Versioned capability manifest and JSON Schema declare contracts, all three rule versions, stable fact fields, link policy, limits, safety invariants and unsupported mutations",
+    "ado-capabilities emits the same runtime-derived declaration from an installed entrypoint",
+    "Capability manifest drift is checked before tests in the fixed validation entrypoint",
+    "ado-benchmark creates a deterministic SHA-256-seeded temporary workload and emits environment, workload, elapsed time, throughput, peak memory and verification JSON",
+    "The benchmark smoke test proves stable repeated facts and unchanged input",
+    "A 1000-file, 4 KiB, three-repeat local baseline was recorded with explicit non-portability language",
+    "48 tests, contract/capability drift gates, goal-state audit and Ruff passed"
+  ],
+  "unresolvedRisks": [
+    "CLI serialization currently allocates the complete report JSON string",
+    "External file report writes are not atomic",
+    "Content-addressed report placement is not exposed"
+  ],
+  "nextSlice": "M1-S5"
+}

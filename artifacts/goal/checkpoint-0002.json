@@ -1,0 +1,21 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 3,
+  "checkpoint": 2,
+  "completedSlice": "M1-S1",
+  "evidence": [
+    "Checked-in art-delivery-profile/1 and art-delivery-audit-report/1 schemas match generated strict Pydantic models",
+    "Parsed checked-in schemas exactly matched the Art Pipeline Skill exports on 2026-08-25",
+    "The fixed quick validation checks schema drift before tests and lint",
+    "Tests prove changed and missing contract artifacts fail parity checks",
+    "25 tests, goal-state audit, contract check and Ruff passed",
+    "A wheel built and its CLI help ran in a fresh isolated virtual environment with no sibling-repository reference"
+  ],
+  "unresolvedRisks": [
+    "Case-insensitive path collisions can be ambiguous across Windows and production storage",
+    "Files changing during hashing can currently yield internally inconsistent facts",
+    "Very large deliveries still build the full report in memory"
+  ],
+  "nextSlice": "M1-S2"
+}

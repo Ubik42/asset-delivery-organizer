@@ -1,0 +1,35 @@
+{
+  "schema": "asset-delivery-organizer-gui-lifecycle/1",
+  "platform": "win32",
+  "python": "3.14.3",
+  "window_backend": "windows",
+  "focus_policy": "show-without-activating-and-offscreen-position",
+  "existing_python_pids_before": [
+    24088,
+    38816,
+    39904,
+    42280,
+    47160,
+    49656
+  ],
+  "existing_python_pids_missing_after": [],
+  "runs": [
+    {
+      "run": 1,
+      "pid": 12440,
+      "exit_code": 0,
+      "elapsed_seconds": 2.026,
+      "screenshot_bytes": 188261,
+      "closed": true
+    },
+    {
+      "run": 2,
+      "pid": 38880,
+      "exit_code": 0,
+      "elapsed_seconds": 1.271,
+      "screenshot_bytes": 188261,
+      "closed": true
+    }
+  ],
+  "status": "passed"
+}

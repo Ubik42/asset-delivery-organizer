@@ -1,0 +1,21 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 4,
+  "checkpoint": 3,
+  "completedSlice": "M1-S2",
+  "evidence": [
+    "Portable path keys use Unicode NFC normalization and case-folding before any file is hashed",
+    "Tests prove case-only and canonically equivalent Unicode paths fail closed",
+    "File facts compare path and open-handle identity, size, mtime and same-API ctime before and after hashing",
+    "A deterministic mutation test proves changes during hashing raise an explicit ScanError",
+    "30 tests, contract drift gate, goal-state audit and Ruff passed",
+    "Stable scans retain deterministic hashes, order and zero writes"
+  ],
+  "unresolvedRisks": [
+    "A delivery can currently contain an unbounded number or total size of files",
+    "Very large reports still build the full JSON object in memory",
+    "No repeatable performance baseline is recorded"
+  ],
+  "nextSlice": "M1-S3"
+}

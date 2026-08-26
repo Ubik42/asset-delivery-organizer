@@ -1,0 +1,99 @@
+{
+  "contracts": {
+    "accepts": [
+      "art-delivery-profile/1"
+    ],
+    "emits": [
+      "art-delivery-audit-report/1"
+    ]
+  },
+  "interfaces": [
+    "desktop-ui",
+    "cli",
+    "python-api"
+  ],
+  "mode": "audit-and-approved-organization",
+  "organization": {
+    "actions": [
+      "rename",
+      "archive"
+    ],
+    "collision_preflight": true,
+    "dry_run_required": true,
+    "explicit_confirmation": true,
+    "external_receipt": true,
+    "post_audit": true,
+    "rollback_on_failure": true,
+    "source_hash_preflight": true
+  },
+  "rules": [
+    {
+      "parameters": [
+        "pattern",
+        "extensions?"
+      ],
+      "rule_id": "filename.pattern",
+      "rule_version": "1.0.0"
+    },
+    {
+      "parameters": [
+        "channels"
+      ],
+      "rule_id": "texture.required-channels",
+      "rule_version": "1.0.0"
+    },
+    {
+      "parameters": [
+        "keep_versions"
+      ],
+      "rule_id": "version.latest-only",
+      "rule_version": "1.0.0"
+    }
+  ],
+  "safety": {
+    "atomic_external_file_output": true,
+    "audit_id_artifact_filename": true,
+    "audit_writes_to_input": false,
+    "detects_file_change_during_hash": true,
+    "detects_portable_path_collision": true,
+    "input_mode": "read-only-audit-approved-organization",
+    "partial_report_on_failure": false,
+    "report_output_must_be_outside_root": true,
+    "report_write_count": 0,
+    "streams_standard_report_json": true
+  },
+  "scan": {
+    "cli_limit_overrides": [
+      "--max-files",
+      "--max-file-bytes",
+      "--max-total-bytes"
+    ],
+    "defaults": {
+      "max_file_bytes": 107374182400,
+      "max_files": 100000,
+      "max_total_bytes": 1099511627776
+    },
+    "file_symlink_policy": "skip-internal-reject-external",
+    "follows_directory_symlinks": false,
+    "portable_path_normalization": [
+      "unicode-nfc",
+      "case-fold"
+    ],
+    "recursive": true,
+    "stable_fact_fields": [
+      "relative_path",
+      "sha256",
+      "size_bytes",
+      "media_type",
+      "parsed_tokens"
+    ]
+  },
+  "schema_id": "asset-delivery-organizer-capabilities/1",
+  "tool_id": "asset-delivery-organizer",
+  "tool_version": "1.0.0",
+  "unsupported": [
+    "dcc-adapter.execute",
+    "file.delete",
+    "material-network.write"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "codex-goal-state/1",
+  "goalId": "asset-delivery-organizer",
+  "objective": "Finish and publish the standalone Chinese asset-delivery desktop product with project records, safe organization planning, collision detection, explicit execution, rollback, post-run re-audit and reproducible screenshots.",
+  "status": "completed",
+  "stateRevision": 14,
+  "currentMilestone": "M4",
+  "milestones": [
+    {"id": "M0", "status": "completed", "dependencies": [], "outcome": "Ship the read-only audit MVP and its safety evidence."},
+    {"id": "M1", "status": "completed", "dependencies": ["M0"], "outcome": "Harden report interoperability and large-delivery behavior."},
+    {"id": "M2", "status": "completed", "dependencies": ["M1"], "outcome": "Provide reproducible production-like demo assets and a complete recording tutorial."},
+    {"id": "M3", "status": "completed", "dependencies": ["M2"], "outcome": "Ship the interactive read-only delivery review workbench."},
+    {"id": "M4", "status": "completed", "dependencies": ["M3"], "outcome": "Ship safe organization, project history and public GitHub release evidence."}
+  ],
+  "nextSlice": null,
+  "validationCommands": [".\\scripts\\goal.ps1 -Action Audit", ".\\scripts\\validate.ps1 -Tier quick", ".\\demo\\run-demo.ps1 -Verify"],
+  "lastCheckpoint": "artifacts/goal/checkpoint-0013.json",
+  "guardrails": ["Modify only this repository", "Never mutate immutable demo/scenarios fixtures; organization demos operate on generated work copies", "Never execute validationCommands dynamically", "Demo assets are synthetic and redistributable", "Mutation requires dry-run, collision checks, explicit confirmation, rollback and post-run verification", "Material networks and DCC adapters remain out of scope"]
+}

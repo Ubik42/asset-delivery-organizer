@@ -1,0 +1,19 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 2,
+  "checkpoint": 1,
+  "completedSlice": "M0-S1",
+  "evidence": [
+    "22 tests passed across valid, invalid, path traversal, duplicate version, missing texture, stable fact and read-only CLI paths",
+    "Ruff static analysis passed",
+    "Goal-state semantic audit passed",
+    "Generated DeliveryProfile and DeliveryAuditReport JSON Schemas exactly matched the Art Pipeline Skill exports on 2026-08-25",
+    "CLI and report model keep write_count fixed at zero and reject report output inside the audited root"
+  ],
+  "unresolvedRisks": [
+    "Contract parity is verified in this checkpoint but not yet a portable checked-in validation gate",
+    "Very large deliveries and files changing during hashing need explicit behavior"
+  ],
+  "nextSlice": "M1-S1"
+}

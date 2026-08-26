@@ -1,0 +1,50 @@
+{
+  "schema_id": "asset-delivery-organizer-demo-expectations/1",
+  "profile": "profiles/atlas.environment.delivery.json",
+  "scenarios": [
+    {
+      "scenario_id": "01_clean_environment_delivery",
+      "file_count": 16,
+      "issue_count": 0,
+      "blocker_count": 0,
+      "error_count": 0,
+      "warning_count": 0,
+      "rule_counts": {}
+    },
+    {
+      "scenario_id": "02_supplier_drop_with_issues",
+      "file_count": 12,
+      "issue_count": 5,
+      "blocker_count": 2,
+      "error_count": 1,
+      "warning_count": 2,
+      "rule_counts": {
+        "filename.pattern": 1,
+        "texture.required-channels": 2,
+        "version.latest-only": 2
+      }
+    },
+    {
+      "scenario_id": "03_multi_asset_udim_batch",
+      "file_count": 58,
+      "issue_count": 0,
+      "blocker_count": 0,
+      "error_count": 0,
+      "warning_count": 0,
+      "rule_counts": {}
+    },
+    {
+      "scenario_id": "04_nested_multi_vendor_batch",
+      "file_count": 14,
+      "issue_count": 3,
+      "blocker_count": 1,
+      "error_count": 1,
+      "warning_count": 1,
+      "rule_counts": {
+        "filename.pattern": 1,
+        "texture.required-channels": 1,
+        "version.latest-only": 1
+      }
+    }
+  ]
+}

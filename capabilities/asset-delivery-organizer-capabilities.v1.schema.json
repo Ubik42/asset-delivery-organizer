@@ -1,0 +1,360 @@
+{
+  "$defs": {
+    "ContractCapabilities": {
+      "additionalProperties": false,
+      "properties": {
+        "accepts": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Accepts",
+          "type": "array"
+        },
+        "emits": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Emits",
+          "type": "array"
+        }
+      },
+      "required": [
+        "accepts",
+        "emits"
+      ],
+      "title": "ContractCapabilities",
+      "type": "object"
+    },
+    "OrganizationCapabilities": {
+      "additionalProperties": false,
+      "properties": {
+        "actions": {
+          "items": {
+            "enum": [
+              "rename",
+              "archive"
+            ],
+            "type": "string"
+          },
+          "title": "Actions",
+          "type": "array"
+        },
+        "collision_preflight": {
+          "const": true,
+          "default": true,
+          "title": "Collision Preflight",
+          "type": "boolean"
+        },
+        "dry_run_required": {
+          "const": true,
+          "default": true,
+          "title": "Dry Run Required",
+          "type": "boolean"
+        },
+        "explicit_confirmation": {
+          "const": true,
+          "default": true,
+          "title": "Explicit Confirmation",
+          "type": "boolean"
+        },
+        "external_receipt": {
+          "const": true,
+          "default": true,
+          "title": "External Receipt",
+          "type": "boolean"
+        },
+        "post_audit": {
+          "const": true,
+          "default": true,
+          "title": "Post Audit",
+          "type": "boolean"
+        },
+        "rollback_on_failure": {
+          "const": true,
+          "default": true,
+          "title": "Rollback On Failure",
+          "type": "boolean"
+        },
+        "source_hash_preflight": {
+          "const": true,
+          "default": true,
+          "title": "Source Hash Preflight",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "actions"
+      ],
+      "title": "OrganizationCapabilities",
+      "type": "object"
+    },
+    "RuleCapability": {
+      "additionalProperties": false,
+      "properties": {
+        "parameters": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Parameters",
+          "type": "array"
+        },
+        "rule_id": {
+          "title": "Rule Id",
+          "type": "string"
+        },
+        "rule_version": {
+          "title": "Rule Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rule_id",
+        "rule_version",
+        "parameters"
+      ],
+      "title": "RuleCapability",
+      "type": "object"
+    },
+    "SafetyCapabilities": {
+      "additionalProperties": false,
+      "properties": {
+        "atomic_external_file_output": {
+          "const": true,
+          "default": true,
+          "title": "Atomic External File Output",
+          "type": "boolean"
+        },
+        "audit_id_artifact_filename": {
+          "const": true,
+          "default": true,
+          "title": "Audit Id Artifact Filename",
+          "type": "boolean"
+        },
+        "audit_writes_to_input": {
+          "const": false,
+          "default": false,
+          "title": "Audit Writes To Input",
+          "type": "boolean"
+        },
+        "detects_file_change_during_hash": {
+          "const": true,
+          "default": true,
+          "title": "Detects File Change During Hash",
+          "type": "boolean"
+        },
+        "detects_portable_path_collision": {
+          "const": true,
+          "default": true,
+          "title": "Detects Portable Path Collision",
+          "type": "boolean"
+        },
+        "input_mode": {
+          "const": "read-only-audit-approved-organization",
+          "title": "Input Mode",
+          "type": "string"
+        },
+        "partial_report_on_failure": {
+          "const": false,
+          "default": false,
+          "title": "Partial Report On Failure",
+          "type": "boolean"
+        },
+        "report_output_must_be_outside_root": {
+          "const": true,
+          "default": true,
+          "title": "Report Output Must Be Outside Root",
+          "type": "boolean"
+        },
+        "report_write_count": {
+          "const": 0,
+          "default": 0,
+          "title": "Report Write Count",
+          "type": "integer"
+        },
+        "streams_standard_report_json": {
+          "const": true,
+          "default": true,
+          "title": "Streams Standard Report Json",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "input_mode"
+      ],
+      "title": "SafetyCapabilities",
+      "type": "object"
+    },
+    "ScanCapabilities": {
+      "additionalProperties": false,
+      "properties": {
+        "cli_limit_overrides": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "title": "Cli Limit Overrides",
+          "type": "array"
+        },
+        "defaults": {
+          "$ref": "#/$defs/ScanDefaults"
+        },
+        "file_symlink_policy": {
+          "const": "skip-internal-reject-external",
+          "title": "File Symlink Policy",
+          "type": "string"
+        },
+        "follows_directory_symlinks": {
+          "const": false,
+          "default": false,
+          "title": "Follows Directory Symlinks",
+          "type": "boolean"
+        },
+        "portable_path_normalization": {
+          "items": {
+            "enum": [
+              "unicode-nfc",
+              "case-fold"
+            ],
+            "type": "string"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "title": "Portable Path Normalization",
+          "type": "array"
+        },
+        "recursive": {
+          "const": true,
+          "default": true,
+          "title": "Recursive",
+          "type": "boolean"
+        },
+        "stable_fact_fields": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Stable Fact Fields",
+          "type": "array"
+        }
+      },
+      "required": [
+        "file_symlink_policy",
+        "portable_path_normalization",
+        "stable_fact_fields",
+        "defaults",
+        "cli_limit_overrides"
+      ],
+      "title": "ScanCapabilities",
+      "type": "object"
+    },
+    "ScanDefaults": {
+      "additionalProperties": false,
+      "properties": {
+        "max_file_bytes": {
+          "minimum": 1,
+          "title": "Max File Bytes",
+          "type": "integer"
+        },
+        "max_files": {
+          "minimum": 1,
+          "title": "Max Files",
+          "type": "integer"
+        },
+        "max_total_bytes": {
+          "minimum": 1,
+          "title": "Max Total Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "max_files",
+        "max_file_bytes",
+        "max_total_bytes"
+      ],
+      "title": "ScanDefaults",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "contracts": {
+      "$ref": "#/$defs/ContractCapabilities"
+    },
+    "interfaces": {
+      "items": {
+        "enum": [
+          "desktop-ui",
+          "cli",
+          "python-api"
+        ],
+        "type": "string"
+      },
+      "minItems": 3,
+      "title": "Interfaces",
+      "type": "array"
+    },
+    "mode": {
+      "const": "audit-and-approved-organization",
+      "title": "Mode",
+      "type": "string"
+    },
+    "organization": {
+      "$ref": "#/$defs/OrganizationCapabilities"
+    },
+    "rules": {
+      "items": {
+        "$ref": "#/$defs/RuleCapability"
+      },
+      "minItems": 1,
+      "title": "Rules",
+      "type": "array"
+    },
+    "safety": {
+      "$ref": "#/$defs/SafetyCapabilities"
+    },
+    "scan": {
+      "$ref": "#/$defs/ScanCapabilities"
+    },
+    "schema_id": {
+      "const": "asset-delivery-organizer-capabilities/1",
+      "title": "Schema Id",
+      "type": "string"
+    },
+    "tool_id": {
+      "const": "asset-delivery-organizer",
+      "title": "Tool Id",
+      "type": "string"
+    },
+    "tool_version": {
+      "title": "Tool Version",
+      "type": "string"
+    },
+    "unsupported": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Unsupported",
+      "type": "array"
+    }
+  },
+  "required": [
+    "schema_id",
+    "tool_id",
+    "tool_version",
+    "mode",
+    "interfaces",
+    "contracts",
+    "rules",
+    "scan",
+    "safety",
+    "organization",
+    "unsupported"
+  ],
+  "title": "CapabilityManifest",
+  "type": "object"
+}

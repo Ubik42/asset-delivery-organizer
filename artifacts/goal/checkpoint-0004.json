@@ -1,0 +1,21 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 5,
+  "checkpoint": 4,
+  "completedSlice": "M1-S3",
+  "evidence": [
+    "Default limits bound scans to 100000 files, 100 GiB per file and 1 TiB total declared bytes",
+    "CLI exposes positive-integer overrides for all three budgets and documents their units",
+    "Preflight tests prove file-count, individual-size and total-size failures occur before hashing starts",
+    "The hash reader enforces the remaining byte budget even after preflight",
+    "39 tests, contract drift gate, goal-state audit and Ruff passed",
+    "CLI help exposes all resource limits and valid override tests preserve stable read-only output"
+  ],
+  "unresolvedRisks": [
+    "Very large reports still build the full JSON object in memory",
+    "Capabilities are documented for humans but not yet machine-readable",
+    "No repeatable performance baseline is recorded"
+  ],
+  "nextSlice": "M1-S4"
+}

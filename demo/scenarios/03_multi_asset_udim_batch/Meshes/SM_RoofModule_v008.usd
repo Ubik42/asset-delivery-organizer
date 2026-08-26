@@ -1,0 +1,12 @@
+#usda 1.0
+(
+    customLayerData = { string generator = "asset-delivery-organizer-demo" }
+)
+def Xform "RoofModule" {
+    custom int deliveryVersion = 8
+    def Mesh "PreviewMesh" {
+        int[] faceVertexCounts = [3]
+        int[] faceVertexIndices = [0, 1, 2]
+        point3f[] points = [(0, 0, 0), (100, 0, 0), (0, 100, 0)]
+    }
+}

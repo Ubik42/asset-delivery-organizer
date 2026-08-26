@@ -1,0 +1,10 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 1,
+  "checkpoint": 0,
+  "completedSlice": null,
+  "evidence": ["Existing README, AGENTS.md and docs were reviewed", "Art Pipeline Skill delivery profile and report contracts were reviewed read-only"],
+  "unresolvedRisks": ["MVP implementation and tests are not yet accepted"],
+  "nextSlice": "M0-S1"
+}

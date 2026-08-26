@@ -1,0 +1,110 @@
+{
+  "$defs": {
+    "OrganizationOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "enum": [
+            "rename",
+            "archive"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "expected_sha256": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Expected Sha256",
+          "type": "string"
+        },
+        "operation_id": {
+          "pattern": "^op-[0-9a-f]{16}$",
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "reason": {
+          "maxLength": 300,
+          "minLength": 3,
+          "title": "Reason",
+          "type": "string"
+        },
+        "source_relative": {
+          "title": "Source Relative",
+          "type": "string"
+        },
+        "target_relative": {
+          "title": "Target Relative",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation_id",
+        "action",
+        "source_relative",
+        "target_relative",
+        "expected_sha256",
+        "reason"
+      ],
+      "title": "OrganizationOperation",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "operations": {
+      "items": {
+        "$ref": "#/$defs/OrganizationOperation"
+      },
+      "title": "Operations",
+      "type": "array"
+    },
+    "output_root": {
+      "minLength": 3,
+      "title": "Output Root",
+      "type": "string"
+    },
+    "plan_id": {
+      "pattern": "^plan-[0-9a-f]{20}$",
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "profile_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Profile Sha256",
+      "type": "string"
+    },
+    "root": {
+      "minLength": 3,
+      "title": "Root",
+      "type": "string"
+    },
+    "schema_id": {
+      "const": "asset-delivery-organization-plan/1",
+      "default": "asset-delivery-organization-plan/1",
+      "title": "Schema Id",
+      "type": "string"
+    },
+    "unresolved_issue_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unresolved Issue Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "plan_id",
+    "root",
+    "output_root",
+    "profile_sha256",
+    "generated_at",
+    "operations",
+    "unresolved_issue_ids"
+  ],
+  "title": "OrganizationPlan",
+  "type": "object"
+}

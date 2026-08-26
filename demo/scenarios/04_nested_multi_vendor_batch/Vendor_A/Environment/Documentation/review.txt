@@ -1,0 +1,1 @@
+Vendor A revision 7 supersedes revision 6.

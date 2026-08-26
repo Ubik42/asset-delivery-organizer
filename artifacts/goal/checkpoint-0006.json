@@ -1,0 +1,22 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 7,
+  "checkpoint": 6,
+  "completedSlice": "M1-S5",
+  "evidence": [
+    "Report JSON is written field-by-field and array-item-by-array-item without calling DeliveryAuditReport.model_dump_json",
+    "Streamed output round-trips through the strict art-delivery-audit-report/1 model",
+    "External output uses a temporary file in the destination directory, fsync and os.replace",
+    "Failure injection proves an existing report is preserved and temporary files are removed",
+    "Lexical and resolved destinations inside the audited root are rejected",
+    "Artifact directory mode uses the stable audit_id as filename and repeat runs atomically replace the same path",
+    "54 tests, contract/capability drift gates, goal-state audit and Ruff passed"
+  ],
+  "unresolvedRisks": [
+    "A release-level requirement-to-evidence audit has not yet been recorded",
+    "The final wheel and fresh-environment end-to-end flow must be rerun after all M1 changes",
+    "Future file-organization work requires explicit user authorization and must not remain part of the active read-only goal"
+  ],
+  "nextSlice": "M1-S6"
+}

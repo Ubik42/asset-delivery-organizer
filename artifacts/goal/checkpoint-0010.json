@@ -1,0 +1,16 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 11,
+  "checkpoint": 10,
+  "completedSlice": "M2-S1",
+  "evidence": [
+    "M0-M2 remain completed and their release evidence is preserved",
+    "The user explicitly corrected the product scope from CLI-only audit to an interactive AutoSort-inspired delivery workbench",
+    "PRODUCT.md and DESIGN.md define the accepted product register, users, workflow, safety boundary and visual system"
+  ],
+  "unresolvedRisks": [
+    "The interactive desktop workbench has not yet passed UI smoke and screenshot validation"
+  ],
+  "nextSlice": "M3-S1"
+}

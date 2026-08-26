@@ -1,0 +1,118 @@
+{
+  "$defs": {
+    "ExecutionRecord": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "enum": [
+            "rename",
+            "archive"
+          ],
+          "title": "Action",
+          "type": "string"
+        },
+        "operation_id": {
+          "title": "Operation Id",
+          "type": "string"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "source_relative": {
+          "title": "Source Relative",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        }
+      },
+      "required": [
+        "operation_id",
+        "action",
+        "source_relative",
+        "target",
+        "sha256"
+      ],
+      "title": "ExecutionRecord",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "completed_at": {
+      "format": "date-time",
+      "title": "Completed At",
+      "type": "string"
+    },
+    "executed": {
+      "items": {
+        "$ref": "#/$defs/ExecutionRecord"
+      },
+      "title": "Executed",
+      "type": "array"
+    },
+    "output_root": {
+      "title": "Output Root",
+      "type": "string"
+    },
+    "plan_id": {
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "post_audit_id": {
+      "title": "Post Audit Id",
+      "type": "string"
+    },
+    "post_issue_count": {
+      "minimum": 0,
+      "title": "Post Issue Count",
+      "type": "integer"
+    },
+    "receipt_id": {
+      "pattern": "^receipt-[0-9a-f]{20}$",
+      "title": "Receipt Id",
+      "type": "string"
+    },
+    "receipt_path": {
+      "title": "Receipt Path",
+      "type": "string"
+    },
+    "root": {
+      "title": "Root",
+      "type": "string"
+    },
+    "schema_id": {
+      "const": "asset-delivery-organization-receipt/1",
+      "default": "asset-delivery-organization-receipt/1",
+      "title": "Schema Id",
+      "type": "string"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "status": {
+      "const": "completed",
+      "title": "Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "receipt_id",
+    "plan_id",
+    "root",
+    "output_root",
+    "started_at",
+    "completed_at",
+    "status",
+    "executed",
+    "post_audit_id",
+    "post_issue_count",
+    "receipt_path"
+  ],
+  "title": "OrganizationReceipt",
+  "type": "object"
+}

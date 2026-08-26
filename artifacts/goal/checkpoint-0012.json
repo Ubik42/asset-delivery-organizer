@@ -1,0 +1,16 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 13,
+  "checkpoint": 12,
+  "completedSlice": "M3-S1",
+  "evidence": [
+    "The user explicitly authorized finishing the standalone desktop product and publishing it to GitHub",
+    "M0-M3 evidence remains preserved",
+    "M4 is limited to project records and safely planned external file organization; DCC scene mutation remains out of scope"
+  ],
+  "unresolvedRisks": [
+    "File organization requires transaction rollback, collision checks and post-run audit evidence before release"
+  ],
+  "nextSlice": "M4-S1"
+}

@@ -1,0 +1,19 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 10,
+  "checkpoint": 9,
+  "completedSlice": "M2-S1",
+  "evidence": [
+    "Four materially different synthetic delivery scenarios contain exactly 100 deterministic files and about 1.28 MiB of data",
+    "The corpus includes 74 valid previewable 128x128 PNGs, 12 ASCII FBX placeholders, 8 USD assets and supplier documentation",
+    "assets-manifest.json records every path, size and SHA-256; generator --check is part of the fixed validation gate",
+    "Expected reports cover clean, faulty, multi-asset UDIM and nested multi-vendor scenarios",
+    "demo/run-demo.ps1 -Reset -Verify produced four PASS rows with expected counts and ReadOnly=True",
+    "A deliberate report path inside a demo input returned exit code 1 and created no file",
+    "docs/VIDEO_TUTORIAL.md provides a complete 10-15 minute Chinese recording script and demo/RECORDING_CHEATSHEET.md provides exact commands",
+    "62 tests, demo asset drift, goal, contract, capability and Ruff gates passed"
+  ],
+  "unresolvedRisks": [],
+  "nextSlice": null
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 9,
+  "checkpoint": 8,
+  "completedSlice": null,
+  "evidence": [
+    "The read-only v0.1.0 product and release audit remain complete",
+    "The user explicitly requested production-like demo assets and full recording documentation",
+    "The new milestone does not authorize UI, input mutation, material networks or DCC adapters"
+  ],
+  "unresolvedRisks": [
+    "No reusable demo delivery corpus currently exists",
+    "No expected-result manifest or one-command walkthrough currently exists",
+    "Current README is insufficient as a complete video recording script"
+  ],
+  "nextSlice": "M2-S1"
+}

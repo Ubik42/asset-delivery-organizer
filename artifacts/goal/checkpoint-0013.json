@@ -1,0 +1,17 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 14,
+  "checkpoint": 13,
+  "completedSlice": "M4-S1",
+  "evidence": [
+    "The desktop product records delivery metadata and local audit history",
+    "Organization is plan-first with containment, hash, duplicate and collision preflight",
+    "Execution requires explicit approval, rolls back failures, writes an external receipt and re-audits",
+    "79 automated tests and the clean-wheel release audit pass",
+    "Four immutable demo scenarios, a mutable organization copy and real Windows screenshots are documented",
+    "The README, MIT license and 1.0.0 release evidence are ready for public GitHub publication"
+  ],
+  "unresolvedRisks": [],
+  "nextSlice": null
+}

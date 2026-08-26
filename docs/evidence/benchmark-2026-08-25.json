@@ -1,0 +1,28 @@
+{
+  "schema_id": "asset-delivery-organizer-benchmark/1",
+  "tool_version": "0.1.0",
+  "environment": {
+    "python": "3.14.3",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "workload": {
+    "generator": "sha256-seeded-binary/1",
+    "files": 1000,
+    "bytes_per_file": 4096,
+    "total_bytes": 4096000,
+    "repeats": 3
+  },
+  "results": {
+    "durations_seconds": [0.4018766, 0.3592541, 0.3559732],
+    "median_seconds": 0.3592541,
+    "files_per_second": 2685.516,
+    "mib_per_second": 10.49,
+    "peak_memory_bytes": 3790094
+  },
+  "verification": {
+    "facts_per_run": 1000,
+    "stable_results": true,
+    "input_unchanged": true
+  },
+  "interpretation": "Local observation only; not a machine-independent performance guarantee."
+}

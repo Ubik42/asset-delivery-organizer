@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "asset-delivery-organizer"
+version = "1.0.0"
+description = "Interactive, read-only workbench and audit engine for art asset deliveries."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = ["pydantic>=2.11,<3"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3,<10", "ruff>=0.11,<1"]
+ui = ["PySide6>=6.8,<7"]
+
+[project.scripts]
+asset-delivery-organizer = "asset_delivery_organizer.cli:main"
+ado = "asset_delivery_organizer.cli:main"
+ado-capabilities = "asset_delivery_organizer.capabilities:main"
+ado-benchmark = "asset_delivery_organizer.benchmark:main"
+ado-ui = "asset_delivery_organizer.ui_launcher:main"
+ado-organize = "asset_delivery_organizer.organization_cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/asset_delivery_organizer"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "scripts/tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

@@ -1,0 +1,1 @@
+Please use final mesh. Normal maps will follow later.

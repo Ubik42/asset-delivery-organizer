@@ -1,0 +1,543 @@
+{
+  "generator_version": "1.0.0",
+  "license": "CC0-1.0 synthetic fixtures",
+  "scenarios": [
+    {
+      "description": "三件环境资产，其中 TempleGate 使用两个完整 UDIM；预期零问题。",
+      "file_count": 16,
+      "files": [
+        {
+          "relative_path": "Documentation/supplier_manifest.txt",
+          "sha256": "ec9dd63bb275351615f769bf47b8cda5f5507ef10469ff7e745e27b2b517d2b2",
+          "size_bytes": 54
+        },
+        {
+          "relative_path": "Meshes/SM_CourtyardRock_v004.fbx",
+          "sha256": "749f38c80caed118645254560f2d5d620ece606d56cbe6881066e738e6d11184",
+          "size_bytes": 660
+        },
+        {
+          "relative_path": "Meshes/SM_StoneLantern_v002.fbx",
+          "sha256": "867c14f8f00c8b19e58e23f3436b3393b942a0ee68d975a3e48d2ca877b1d25b",
+          "size_bytes": 658
+        },
+        {
+          "relative_path": "Meshes/SM_TempleGate_v003.fbx",
+          "sha256": "2f7319b21e3a3d0d0fc8d46cae160a98b611fd8a23e8a86de2d04e98678faece",
+          "size_bytes": 650
+        },
+        {
+          "relative_path": "Textures/T_CourtyardRock_B.1001.png",
+          "sha256": "2a3873c7a33183e596cf162c539df09cc752d7cea19a3dd6c4a8e4b097467505",
+          "size_bytes": 47621
+        },
+        {
+          "relative_path": "Textures/T_CourtyardRock_N.1001.png",
+          "sha256": "5ecf899543fb7122d8666b4c1b51aacd10f15f73124c42645e52bc43ed7ab142",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_CourtyardRock_R.1001.png",
+          "sha256": "cc20e419ff7139f3050cfb6d4906018c9c6ef9e8119e36fb55c5a1965a4c5750",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_StoneLantern_B.1001.png",
+          "sha256": "0d16098de3d0a3a1e58aafe47238afe4643f92b096e0b590de2bfb7e87a247d4",
+          "size_bytes": 47348
+        },
+        {
+          "relative_path": "Textures/T_StoneLantern_N.1001.png",
+          "sha256": "cc9537d51ef23b5f0954b7f0bd5506abc70f53c01386626445b2c93725355702",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_StoneLantern_R.1001.png",
+          "sha256": "72c23d129a892b973186db5feb4384c2d5de121e2d26986ea8558bfb78c0b107",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_TempleGate_B.1001.png",
+          "sha256": "1c25e60c088a03a4cfead466bb086077b3a4b4238b31b38e53ad30ba5adf9dbb",
+          "size_bytes": 47935
+        },
+        {
+          "relative_path": "Textures/T_TempleGate_B.1002.png",
+          "sha256": "c7f81788510fe04b995d25f9b2b7d6cc060be83ece943fa689dc689d09608fd6",
+          "size_bytes": 47793
+        },
+        {
+          "relative_path": "Textures/T_TempleGate_N.1001.png",
+          "sha256": "5554fd30fbc24a4be88a5ee870bd38e8e526c826ea2d391b90421aee0c237ec1",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_TempleGate_N.1002.png",
+          "sha256": "35f803bbb52ba42e134332e17a986a7af07fa6bc4c57cb44aa40017aabece825",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_TempleGate_R.1001.png",
+          "sha256": "c63e1b20adcf331a0d0a8cdfa11d8db9ccc002fe6d266b3045c46e44f1750619",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_TempleGate_R.1002.png",
+          "sha256": "2f87b5d08ec2dce0d0229ee244c2de0d1306f8027d76a6f8acd3d74de76fee5d",
+          "size_bytes": 1224
+        }
+      ],
+      "scenario_id": "01_clean_environment_delivery",
+      "title": "合规环境资产交付",
+      "total_bytes": 206583
+    },
+    {
+      "description": "包含错误命名、两个旧版本，以及两组缺失贴图通道；适合演示问题证据。",
+      "file_count": 12,
+      "files": [
+        {
+          "relative_path": "Documentation/vendor_notes.txt",
+          "sha256": "4452b50426df9cb6cb66bead6710a5dc7ca4a009a62bf21a4c7fc83a15f32d97",
+          "size_bytes": 54
+        },
+        {
+          "relative_path": "Meshes/SM_BrokenStatue_v004.fbx",
+          "sha256": "1ee47c5dca6348dded81715df27c97600a7501c7abc9e434f979665162c73f5b",
+          "size_bytes": 658
+        },
+        {
+          "relative_path": "Meshes/SM_TempleGate_v001.fbx",
+          "sha256": "097c6a21b95ce1674a714717a30431a63edb3d5a11749e952fcc8ac286d6533f",
+          "size_bytes": 654
+        },
+        {
+          "relative_path": "Meshes/SM_TempleGate_v002.fbx",
+          "sha256": "11c81f9732cbfbe79504fe6ab4976dd84a21f5da10d64d826102f000587108e7",
+          "size_bytes": 654
+        },
+        {
+          "relative_path": "Meshes/SM_TempleGate_v003.fbx",
+          "sha256": "2f7319b21e3a3d0d0fc8d46cae160a98b611fd8a23e8a86de2d04e98678faece",
+          "size_bytes": 650
+        },
+        {
+          "relative_path": "Meshes/temple-gate-final.fbx",
+          "sha256": "61458a166e36b6f37e8bdeb4641e09d655977863d9bbc550495a58b0fb101102",
+          "size_bytes": 668
+        },
+        {
+          "relative_path": "Textures/T_BrokenStatue_B.1001.png",
+          "sha256": "88f5ae785286230d2c0af45529ee46fb670d2fff2c1d4d410f061affbbff1859",
+          "size_bytes": 47766
+        },
+        {
+          "relative_path": "Textures/T_BrokenStatue_B.1002.png",
+          "sha256": "89a544597091d233b1b145c802f3f9e55372b8a5fa6a4d4b1d4463c27f793479",
+          "size_bytes": 48233
+        },
+        {
+          "relative_path": "Textures/T_BrokenStatue_N.1001.png",
+          "sha256": "066ed2cb86c33d50696b9596d844108b470ebeed07230ba1e52bc081ec158963",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_BrokenStatue_N.1002.png",
+          "sha256": "12a9d224482673fa96d9be37513a46f34daa625f31533f6668b8c8468a4698c5",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_BrokenStatue_R.1002.png",
+          "sha256": "89ca3d1c8561b60ed0c373191304b38d7738e81b00add3fb140a07b800bdc490",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_TempleGate_B.1001.png",
+          "sha256": "1c25e60c088a03a4cfead466bb086077b3a4b4238b31b38e53ad30ba5adf9dbb",
+          "size_bytes": 47935
+        }
+      ],
+      "scenario_id": "02_supplier_drop_with_issues",
+      "title": "典型供应商问题包",
+      "total_bytes": 152980
+    },
+    {
+      "description": "八件资产、每件两个完整 UDIM，用于展示递归扫描规模、稳定事实和吞吐。",
+      "file_count": 58,
+      "files": [
+        {
+          "relative_path": "Documentation/README.txt",
+          "sha256": "ed9ff1828435908cccc4ddb8416df6c4122bce9abc870997ce3413406183ed96",
+          "size_bytes": 40
+        },
+        {
+          "relative_path": "Documentation/batch.csv",
+          "sha256": "3a2c85753fca02f7c0d3f25ebcc482057b9193bbef341ab76a1d1dc83f2a1b86",
+          "size_bytes": 289
+        },
+        {
+          "relative_path": "Meshes/SM_AncientWall_v003.usd",
+          "sha256": "b1ffa2e8d40c62875fddae80a30d0aaf20c7aebf715d4a58775d7f1bd4e2b105",
+          "size_bytes": 335
+        },
+        {
+          "relative_path": "Meshes/SM_Archway_v004.usd",
+          "sha256": "b56b4b8b976faf5d0a4d3b047bdfe729a7b71c1046456d1e0b4307ed005b56d3",
+          "size_bytes": 331
+        },
+        {
+          "relative_path": "Meshes/SM_CliffLarge_v005.usd",
+          "sha256": "54880ab2cdda844717123e7deda906b90a51fa355104b26a2f7564623cb36026",
+          "size_bytes": 334
+        },
+        {
+          "relative_path": "Meshes/SM_GroundTile_v006.usd",
+          "sha256": "4117993ffed55aeebe19f0091af03e5347cfe6ed0168f86abc012a2162880295",
+          "size_bytes": 334
+        },
+        {
+          "relative_path": "Meshes/SM_MarketStall_v007.usd",
+          "sha256": "6947a1d7f3bd50750c74997096d6ca4b601c101bea3e448ad6145d0c5d76d577",
+          "size_bytes": 335
+        },
+        {
+          "relative_path": "Meshes/SM_RoofModule_v008.usd",
+          "sha256": "8b6f647dcb7b3bffdd7b2f9fdf4f229acf04ff3ed1e998eefb1ce2497f58c964",
+          "size_bytes": 334
+        },
+        {
+          "relative_path": "Meshes/SM_ShrineBase_v009.usd",
+          "sha256": "82a70bcf52ed01b0b0bac4c6c7d5109f6925c127fbd042652af5dd9d3c70567c",
+          "size_bytes": 334
+        },
+        {
+          "relative_path": "Meshes/SM_WoodBridge_v010.usd",
+          "sha256": "eeac0a3459e8bcec60f3b2a8bfb64ad8c8d0873eff1252b996c9e7ca625d5d68",
+          "size_bytes": 335
+        },
+        {
+          "relative_path": "Textures/T_AncientWall_B.1001.png",
+          "sha256": "794bd0e73fb4ef564704b973ede7c20c10a2ce8f8b50d0b6e5899ebb6331ec64",
+          "size_bytes": 47913
+        },
+        {
+          "relative_path": "Textures/T_AncientWall_B.1002.png",
+          "sha256": "8a5cff144753c4ba0b81269d7baebbd7accdb67c143058b73edc3003ad468589",
+          "size_bytes": 47934
+        },
+        {
+          "relative_path": "Textures/T_AncientWall_N.1001.png",
+          "sha256": "ae3455d1eb696b0e3195318e58d76c36cc59302dda9ca457e8af9a879c332ee1",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_AncientWall_N.1002.png",
+          "sha256": "6d75eb71e62a0fea789f155540fd0e5eba8678fcc535f49388b4751d88978a76",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_AncientWall_R.1001.png",
+          "sha256": "50412fb760caac135de05f35a9086f21aae522cbc771b2bea441bd15da7d597a",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_AncientWall_R.1002.png",
+          "sha256": "9501ee84d759fb040260505b325151f325530b8a577f4bf5296db62c185816ba",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_Archway_B.1001.png",
+          "sha256": "421a104dbbbd6cfb930cd7181577858cf3e0a8f2c2d53670157a9efe83821ebc",
+          "size_bytes": 47900
+        },
+        {
+          "relative_path": "Textures/T_Archway_B.1002.png",
+          "sha256": "4d7bd985f3f0c9b0e831c3754f63d3f5ca841e0d2467ed6ddb3e04946eb23866",
+          "size_bytes": 47326
+        },
+        {
+          "relative_path": "Textures/T_Archway_N.1001.png",
+          "sha256": "9e4eafeb5c489803d7957e40bfc8d5c245efce678294d302e1179b02b141a08f",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_Archway_N.1002.png",
+          "sha256": "5832a7bc4cf7f394ac96da3aa0a18a83668835bb9cabfe2151de428212ceacb5",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_Archway_R.1001.png",
+          "sha256": "6d821175e726b35e6e9dcca71b3ae6ec969f529e4ee626a00119907382129171",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_Archway_R.1002.png",
+          "sha256": "cbaef4999397ed24d977ce0749f3ed779f2b10a10eed34b9325d3e2f7c4c379b",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_CliffLarge_B.1001.png",
+          "sha256": "0785c201e99de32e75edf31eae950b7ce59a21c7588324a520e56acf9f6984a0",
+          "size_bytes": 47776
+        },
+        {
+          "relative_path": "Textures/T_CliffLarge_B.1002.png",
+          "sha256": "3c9641d5eb6dc907e4aed0206ed9827f13b2f36117df14c141a070533d95a46b",
+          "size_bytes": 48156
+        },
+        {
+          "relative_path": "Textures/T_CliffLarge_N.1001.png",
+          "sha256": "1f1ffe86dbbc1a948194f1ad7ac731bfba5ca75ac4630704d0d1f88b5be6be5a",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_CliffLarge_N.1002.png",
+          "sha256": "b7f50401967be89ae4f11cd8f0007fe6118dd7a65223a0b67741085e66528891",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_CliffLarge_R.1001.png",
+          "sha256": "a8f20612ed8c9365b480d7d8d674dac539ac73e92310f7c258c6be58ccf7fe10",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_CliffLarge_R.1002.png",
+          "sha256": "9905783d30d7b69e8b6090de5b12774b8af51ce5a10d60edd2e2d9a723a87c9d",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_GroundTile_B.1001.png",
+          "sha256": "e8a5d1285a79da1d3d247fee0b2404d16c83ff63d1107bc21c4ca0f3ba811a0d",
+          "size_bytes": 48280
+        },
+        {
+          "relative_path": "Textures/T_GroundTile_B.1002.png",
+          "sha256": "33fc898c926b0b0569e6b010849e99f03e9dc8e59366ddd0d02cbe529949026d",
+          "size_bytes": 47605
+        },
+        {
+          "relative_path": "Textures/T_GroundTile_N.1001.png",
+          "sha256": "83a6cce6c5aaf24a9ecc76a3156b57bea0e00c3673261ac60add472f8988af67",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_GroundTile_N.1002.png",
+          "sha256": "a8d60fb35540d359284c1e1cf9e9286b4b98b6bf337350279e20d5560385a394",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_GroundTile_R.1001.png",
+          "sha256": "0ca53571a750e99ad7e708a5714f1c47314055656b06db61fc63960338fe96ee",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_GroundTile_R.1002.png",
+          "sha256": "9501ee84d759fb040260505b325151f325530b8a577f4bf5296db62c185816ba",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_MarketStall_B.1001.png",
+          "sha256": "feaa0ebbe23b9d16045ae34ee916402555f18b553c5731dcf167212c51e7473d",
+          "size_bytes": 47448
+        },
+        {
+          "relative_path": "Textures/T_MarketStall_B.1002.png",
+          "sha256": "f155ce19a18c05e615ef74ad77c44730eec2d78c5e5310287cac50800b78b3d8",
+          "size_bytes": 48541
+        },
+        {
+          "relative_path": "Textures/T_MarketStall_N.1001.png",
+          "sha256": "89a15b994d515899afaa5a165e8e9e00475352d0804f1ac02fffbe82fd6681e3",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_MarketStall_N.1002.png",
+          "sha256": "6b4401de8aa124db64d6c2f13daaf09466136e25a1f3572e1256d75f29139a11",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_MarketStall_R.1001.png",
+          "sha256": "addb0aa8fd1dc37341c97a9a4458758553d459664ffbda3bf4187a8c5923ffe8",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_MarketStall_R.1002.png",
+          "sha256": "5d77778ccb1c2eb51f8133018df279ff17bd75b7661302705c474c0636eea9cf",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_RoofModule_B.1001.png",
+          "sha256": "4cfc84c8cde4c3823b8fed97585d7ba2fe49536eacc1a2a045962d477da5c6fa",
+          "size_bytes": 47296
+        },
+        {
+          "relative_path": "Textures/T_RoofModule_B.1002.png",
+          "sha256": "fbe0a70549d3f40a65d01ca40532de1fd9f58257ec4427a1ee493a20763fd1b1",
+          "size_bytes": 48498
+        },
+        {
+          "relative_path": "Textures/T_RoofModule_N.1001.png",
+          "sha256": "f7495926d18f01016ede77fda95bf29d18904c1abd00681b1ece92efa6ced3b2",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_RoofModule_N.1002.png",
+          "sha256": "e0fff9e7bc809519bb45b59e619ec31b7ba62d70ab81e8bec85162650d562e3a",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_RoofModule_R.1001.png",
+          "sha256": "0ca53571a750e99ad7e708a5714f1c47314055656b06db61fc63960338fe96ee",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_RoofModule_R.1002.png",
+          "sha256": "d5a34f75e4970126f7b67dc509578095d917ca8ed257226dcc4c5b0b96b7338a",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_ShrineBase_B.1001.png",
+          "sha256": "55ed373cb81a19a839f718bd16f54d396eec0b7488c0055701367be8e271e778",
+          "size_bytes": 47523
+        },
+        {
+          "relative_path": "Textures/T_ShrineBase_B.1002.png",
+          "sha256": "785f93ec12c2c17d1c9913c1b1e0e4725854e4f373a3232e6d454521fff35c65",
+          "size_bytes": 47272
+        },
+        {
+          "relative_path": "Textures/T_ShrineBase_N.1001.png",
+          "sha256": "e722fe20a9ab694ef9e48fa66e9942b2de35b96eb401bb0b7bb9f34b95f217f3",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_ShrineBase_N.1002.png",
+          "sha256": "b11acb09b5029a7aaaefdeb97a53d472bce69384e1193bc967889fd07eaa9525",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_ShrineBase_R.1001.png",
+          "sha256": "c6175c865d5a76c703c58d2c0040a8b0eedb9675254a2392dd0884a85e5e93f1",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_ShrineBase_R.1002.png",
+          "sha256": "585fb8842d3847a3016d078c492b554bf58629533d8f1f08f95054a832ce7f2a",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_WoodBridge_B.1001.png",
+          "sha256": "905bfa211325a1329f54223b4354a463b1ae5dda53ce09da3be217e39cc441c1",
+          "size_bytes": 47853
+        },
+        {
+          "relative_path": "Textures/T_WoodBridge_B.1002.png",
+          "sha256": "1adc8222aa8717e5b7284286623bbaf333dacd89c001fdcf53c1c6484835afbe",
+          "size_bytes": 47701
+        },
+        {
+          "relative_path": "Textures/T_WoodBridge_N.1001.png",
+          "sha256": "9f197d183be8f5085c4b50f0286c55515ca5162e8029d0284e064ca6e78c7d03",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_WoodBridge_N.1002.png",
+          "sha256": "051737e573533e5c61ecf1da56ef9daecedf022e8fab49af14f8c62c40decf6a",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_WoodBridge_R.1001.png",
+          "sha256": "eb9b44d54982b548fa84bfceb5a382c89e629a062c7906513d08ebbdc35a079e",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_WoodBridge_R.1002.png",
+          "sha256": "685c47b2834f25f6a7334202574b7b64fd1f808cde4c22ae3068941c19a8bfbb",
+          "size_bytes": 1224
+        }
+      ],
+      "scenario_id": "03_multi_asset_udim_batch",
+      "title": "多资产多 UDIM 批量交付",
+      "total_bytes": 823479
+    },
+    {
+      "description": "两个供应商、不同资产层级，包含旧 Cliff、错误 Crate 命名和缺失粗糙度。",
+      "file_count": 14,
+      "files": [
+        {
+          "relative_path": "Vendor_A/Environment/Documentation/review.txt",
+          "sha256": "504bd2431eff1c88a567c2d86ecb3a4eeac5f23c00ea6d0bc9fe36c52427c4c0",
+          "size_bytes": 43
+        },
+        {
+          "relative_path": "Vendor_A/Environment/Meshes/SM_Cliff_v006.fbx",
+          "sha256": "03fe449658ac5fdf866a6e6468e3f74934cf43e7cbdf57889bb5ab17bc3c5251",
+          "size_bytes": 644
+        },
+        {
+          "relative_path": "Vendor_A/Environment/Meshes/SM_Cliff_v007.fbx",
+          "sha256": "f003936ef447fda9060810634e4110fd1bc795825bead38413b8b28ce7249f30",
+          "size_bytes": 644
+        },
+        {
+          "relative_path": "Vendor_A/Environment/Textures/T_Cliff_B.1001.png",
+          "sha256": "26f94ef1a1ad39ac58efd0ffe1dbc7627af104617a9a391328d1bb886850b9cf",
+          "size_bytes": 48041
+        },
+        {
+          "relative_path": "Vendor_A/Environment/Textures/T_Cliff_N.1001.png",
+          "sha256": "86fa9d7ea8678f457221de699307d63b8d11ab07489abaa59fd1c6fec4c24d47",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Vendor_A/Environment/Textures/T_Cliff_R.1001.png",
+          "sha256": "d27aa66380b364549d48f70e42993e1b87d39838160aaea7168cb9f6321e97e0",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Vendor_B/Props/Documentation/review.txt",
+          "sha256": "1d07133156c44f2c4e874a1289fc3ed6ea22182958dc99e0b6c6b8bda3ea4873",
+          "size_bytes": 28
+        },
+        {
+          "relative_path": "Vendor_B/Props/Meshes/SM_Crate_v002.fbx",
+          "sha256": "fc51b77613aee46968af53d2d8e8b59b60ca269fa9a6a4bad67f2ffceaf27054",
+          "size_bytes": 644
+        },
+        {
+          "relative_path": "Vendor_B/Props/Meshes/crate_export.fbx",
+          "sha256": "a2ff23e4f1ee8b536cd3c2d31b99409177e40a9eba685ed49cee069188c9247b",
+          "size_bytes": 658
+        },
+        {
+          "relative_path": "Vendor_B/Props/Textures/T_Barrel_B.1001.png",
+          "sha256": "d92040ad9cd6e9ba097e36948c9921a27d3ec240114cead17b0773dbbf4e919b",
+          "size_bytes": 48189
+        },
+        {
+          "relative_path": "Vendor_B/Props/Textures/T_Barrel_N.1001.png",
+          "sha256": "c8788329048f14174f4508b6547204b46d9daeb8b8ec5c6669768118cdb5fddc",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Vendor_B/Props/Textures/T_Barrel_R.1001.png",
+          "sha256": "6b72c5e7644599b5ac6fa96846b9f4eb8a4d67fdaf6e1e9a8f7a4872d9cee1f1",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Vendor_B/Props/Textures/T_Crate_B.1001.png",
+          "sha256": "7553196f5ed466553ad78d106f2bfeeb3e511f33f11475bd28e599752e3508c2",
+          "size_bytes": 47333
+        },
+        {
+          "relative_path": "Vendor_B/Props/Textures/T_Crate_N.1001.png",
+          "sha256": "b2dc0f42a999e93bb3e5467a0968779b15b439a89571b11b8d63eb8a8502c239",
+          "size_bytes": 2242
+        }
+      ],
+      "scenario_id": "04_nested_multi_vendor_batch",
+      "title": "嵌套多供应商交付",
+      "total_bytes": 155398
+    }
+  ],
+  "schema_id": "asset-delivery-organizer-demo-assets/1"
+}
