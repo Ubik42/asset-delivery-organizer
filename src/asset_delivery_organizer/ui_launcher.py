@@ -36,6 +36,16 @@ def parser() -> argparse.ArgumentParser:
         help="截图自动化专用：写入无效命名正则，展示字段级校验阻断。",
     )
     value.add_argument(
+        "--simulate-boundary-profile-error",
+        action="store_true",
+        help="截图自动化专用：写入路径穿越目录，展示目录规则配置阻断。",
+    )
+    value.add_argument(
+        "--issue-rule",
+        choices=("path.allowed-roots", "file.allowed-extensions"),
+        help="截图自动化专用：只展示指定规则的问题与证据。",
+    )
+    value.add_argument(
         "--simulate-profile-save-rejection",
         action="store_true",
         help="截图自动化专用：尝试保存到交付目录内，展示安全拒绝且不写入。",
@@ -114,6 +124,8 @@ def run(argv: list[str] | None = None) -> int:
                 window._generate_organization_plan()
             if args.simulate_profile_error:
                 window.profile_filename_pattern.setText("[")
+            if args.simulate_boundary_profile_error:
+                window.profile_allowed_roots.setText("Meshes, ../escape")
             if args.simulate_profile_save_rejection:
                 try:
                     window._save_profile_to(args.root / "forbidden-profile.json")
@@ -123,6 +135,10 @@ def run(argv: list[str] | None = None) -> int:
                 window.plan_table.item(window.plan_table.rowCount() - 1, 3).setText(
                     "Meshes/SM_BrokenStatue_v004.fbx"
                 )
+            if args.issue_rule:
+                index = window.rule_filter.findData(args.issue_rule)
+                if index >= 0:
+                    window.rule_filter.setCurrentIndex(index)
             if args.execute_organization:
                 window.organization_worker = None
                 window._execute_organization_plan(confirm=False)

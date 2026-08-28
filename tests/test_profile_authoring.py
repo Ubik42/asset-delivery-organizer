@@ -66,12 +66,26 @@ def test_existing_profile_round_trips_through_authoring_core(profile_file: Path)
             ),
         ),
         (
+            "允许交付目录",
+            replace(
+                preset_by_id("environment-standard").draft,
+                allowed_roots=("Meshes", "../escape"),
+            ),
+        ),
+        (
+            "允许文件格式",
+            replace(
+                preset_by_id("environment-standard").draft,
+                allowed_extensions=(".fbx", "FBX"),
+            ),
+        ),
+        (
             "检查规则",
             replace(
-                    preset_by_id("environment-standard").draft,
-                    roots_enabled=False,
-                    formats_enabled=False,
-                    filename_enabled=False,
+                preset_by_id("environment-standard").draft,
+                roots_enabled=False,
+                formats_enabled=False,
+                filename_enabled=False,
                 texture_enabled=False,
                 version_enabled=False,
             ),

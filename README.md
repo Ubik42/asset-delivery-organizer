@@ -18,14 +18,16 @@
 1. **交付设置**：选择目录、Profile、角色、公司/人员/项目/资产代码、制作阶段和审核状态；
 2. **项目规则**：从环境/角色模板创建 Profile，导入、编辑、即时校验并安全另存；
 3. **文件浏览**：按名称、类型和问题状态筛选，查看 SHA-256、解析字段、图片与文本预览；
-4. **问题审查**：按严重级别与规则定位命名错误、缺失贴图和旧版本；
+4. **问题审查**：按严重级别与规则定位错放目录、禁用格式、命名错误、缺失贴图和旧版本；
 5. **整理方案**：生成可编辑计划，重命名不合规模型，将旧版本归档到交付目录之外；
 6. **审计记录**：本机记录审计历史、负责人、状态、执行收据和复检结果；
 7. **报告导出**：输出标准 `art-delivery-audit-report/1` JSON。
 
 ![可视化项目规则编辑](docs/screenshots/workbench-profile-editor.png)
 
-![问题证据](docs/screenshots/workbench-issues.png)
+![目录白名单问题与证据](docs/screenshots/workbench-boundary-path-issues.png)
+
+![格式白名单问题与证据](docs/screenshots/workbench-boundary-format-issues.png)
 
 ## 当前能力
 
@@ -33,7 +35,9 @@
 - 环境资产和角色资产两套版本化 Profile 模板，无需手写 JSON 即可开始；
 - Profile 导入、字段级即时校验、原子另存与应用，禁止保存到被审计交付目录；
 - Profile 或本次启用规则变化后，旧审计和旧整理计划自动失效；
-- `filename.pattern@1.0.0`、`texture.required-channels@1.0.0`、`version.latest-only@1.0.0`；
+- 五条可版本化确定性规则：目录白名单、文件格式白名单、命名正则、贴图通道完整性和仅保留最新版本；
+- `path.allowed-roots@1.0.0` 使用可移植相对路径证据定位错放目录；
+- `file.allowed-extensions@1.0.0` 支持扩展名白名单与可选忽略目录；
 - 递归扫描、稳定相对路径、SHA-256、媒体类型和命名 token；
 - Unicode/大小写路径冲突、路径穿越、符号链接逃逸、扫描中途变化和资源预算防线；
 - 可选择本次启用规则，不需要修改项目 Profile；
@@ -66,11 +70,17 @@ python -m venv .venv
 
 ### 不手写 JSON 创建项目规则
 
-进入“项目规则”，选择“环境资产标准交付”或“角色资产标准交付”，点击“从模板新建”。填写项目代码、Profile ID、版本、命名正则、模型格式、贴图通道和保留版本数；底部显示“配置有效”后，另存到交付目录之外并应用。
+进入“项目规则”，选择“环境资产标准交付”或“角色资产标准交付”，点击“从模板新建”。填写项目代码、Profile ID、版本、允许目录、允许格式、格式忽略目录、命名正则、贴图通道和保留版本数；底部显示“配置有效”后，另存到交付目录之外并应用。
+
+![目录与格式规则可视化配置](docs/screenshots/workbench-boundary-profile.png)
 
 ![无效正则被字段级阻断](docs/screenshots/workbench-profile-invalid.png)
 
 无效字段会变红并说明具体原因，保存按钮同时禁用。保存后的 Profile 仍是严格 `art-delivery-profile/1` JSON，可继续被桌面、CLI、Skill 和 CI 共用。
+
+目录穿越配置同样会立即阻断，不会等到扫描时才失败：
+
+![危险相对目录被字段级阻断](docs/screenshots/workbench-boundary-profile-invalid.png)
 
 尝试把 Profile 写入当前交付目录时，工具会在产生文件之前拒绝：
 
@@ -152,7 +162,7 @@ ado-organize execute D:\delivery-archive\plans\plan-xxxxxxxx.json `
 
 ## 演示素材
 
-仓库包含 4 组不可变合成场景，共 100 个文件：
+仓库包含 5 组不可变合成场景，共 109 个文件：
 
 | 场景 | 文件 | 问题 | 重点 |
 | --- | ---: | ---: | --- |
@@ -160,6 +170,7 @@ ado-organize execute D:\delivery-archive\plans\plan-xxxxxxxx.json `
 | `02_supplier_drop_with_issues` | 12 | 5 | 错误命名、缺失通道、两个旧版本 |
 | `03_multi_asset_udim_batch` | 58 | 0 | 8 个资产、48 张 UDIM 贴图 |
 | `04_nested_multi_vendor_batch` | 14 | 3 | 嵌套目录、多供应商 |
+| `05_delivery_boundary_preflight` | 9 | 4 | 错放目录、禁用格式、忽略文档目录 |
 
 素材由固定脚本生成并采用 CC0-1.0。整理演示永远先复制到被 Git 忽略的 `work/`，不会修改 `demo/scenarios`。路径、大小和哈希见 [素材清单](demo/assets-manifest.json)。
 
@@ -186,15 +197,15 @@ Python / Skill ──┘          │
 .\scripts\release_audit.ps1
 ```
 
-当前自动测试覆盖合同、扫描边界、三条规则、报告写入、四组素材、呈现模型、Qt 工作台、整理生成、目标冲突、源哈希变化、成功执行、CLI 精确批准、模拟中途失败回滚、复检、收据与历史数据库。
+当前自动测试覆盖合同、扫描边界、五条规则、报告写入、五组素材、规则筛选与证据同步、Qt 工作台、整理生成、目标冲突、源哈希变化、成功执行、CLI 精确批准、模拟中途失败回滚、复检、收据与历史数据库。
 
-Profile 工作区额外覆盖模板漂移、严格导入、重复规则、无效正则、重复通道、交付目录内保存拒绝、已有目标保护、保存后 CLI 重载和旧审计失效。
+Profile 工作区额外覆盖模板漂移、严格导入、重复规则、危险目录、重复格式、无效正则、重复通道、交付目录内保存拒绝、已有目标保护、保存后 CLI 重载和旧审计失效。
 
-发布证据见 [1.0.0 发布审计](docs/RELEASE_AUDIT_1.0.0.md)，完整录制流程见 [演示录制脚本](docs/VIDEO_TUTORIAL.md)。
+发布证据见 [1.0.0 发布审计](docs/RELEASE_AUDIT_1.0.0.md) 与 [M6 交付边界规则验收](docs/M6_DELIVERY_BOUNDARY_RULES_AUDIT.md)，完整录制流程见 [演示录制脚本](docs/VIDEO_TUTORIAL.md)。
 
 ## 当前边界
 
-当前 `main` 分支是 1.1 开发线：已完成 1.0.0 的独立资产交付工具能力，并加入可视化 Profile 配置工作区；正式 1.1 分发包将在 M7 发布验收后生成。本项目不是对原 AutoSort 全部 DCC 内功能的复刻，以下能力不在本仓库中冒充完成：
+当前 `main` 分支是 1.1 开发线：已完成 1.0.0 的独立资产交付能力、可视化 Profile 工作区以及目录/格式边界规则；正式 1.1 分发包将在 M7 发布验收后生成。本项目不是对原 AutoSort 全部 DCC 内功能的复刻，以下能力不在本仓库中冒充完成：
 
 - Maya/Arnold 材质节点网络写入；
 - Maya、Blender、Houdini、3ds Max 内嵌面板；

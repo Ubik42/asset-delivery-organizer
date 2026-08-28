@@ -7,7 +7,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from asset_delivery_organizer.audit import load_profile
+from asset_delivery_organizer.audit import audit_delivery, load_profile
 from asset_delivery_organizer.capabilities import current_capabilities
 from asset_delivery_organizer.contracts import DeliveryAuditReport
 from asset_delivery_organizer.organization import (
@@ -79,6 +79,17 @@ def main() -> int:
             "version.latest-only",
         }
         capabilities = current_capabilities()
+        profile, profile_digest = load_profile(
+            REPO / "profiles" / "atlas.environment.delivery.json"
+        )
+        boundary_delivery = workspace / "boundary_drop"
+        (boundary_delivery / "Exports").mkdir(parents=True)
+        (boundary_delivery / "Meshes").mkdir()
+        (boundary_delivery / "Exports" / "SM_Tower_v001.fbx").write_bytes(b"fbx")
+        (boundary_delivery / "Meshes" / "SM_Tower_v001.blend").write_bytes(b"blend")
+        boundary_before = snapshot(boundary_delivery)
+        boundary_report = audit_delivery(boundary_delivery, profile, profile_digest)
+        boundary_rules = {item.rule_id for item in boundary_report.issues}
         authored_profile = build_profile(preset_by_id("environment-standard").draft)
         authored_target = workspace / "profiles" / "environment.json"
         saved_profile, saved_digest = save_profile(
@@ -93,7 +104,6 @@ def main() -> int:
             profile_root_rejected = not forbidden_profile.exists()
         organization_output = workspace / "organization-output"
         plan = generate_organization_plan(report, delivery, organization_output)
-        profile, _ = load_profile(REPO / "profiles" / "atlas.environment.delivery.json")
         receipt, post_report = execute_organization_plan(plan, profile=profile)
         checks = {
             "input_unchanged": before == after,
@@ -120,6 +130,11 @@ def main() -> int:
                 and capabilities.profile_authoring.visual_editor
             ),
             "profile_save_inside_delivery_rejected": profile_root_rejected,
+            "boundary_rules_clean_install": boundary_rules == {
+                "path.allowed-roots",
+                "file.allowed-extensions",
+            },
+            "boundary_audit_input_unchanged": snapshot(boundary_delivery) == boundary_before,
         }
         if not all(checks.values()):
             raise RuntimeError(f"release audit checks failed: {checks}")

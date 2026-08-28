@@ -36,8 +36,8 @@ def snapshot(root: Path) -> dict[str, tuple[int, int, bytes]]:
 
 def test_demo_corpus_is_complete_deterministic_and_sufficiently_large() -> None:
     specs = GENERATOR.scenario_specs()
-    assert len(specs) == 4
-    assert sum(len(item.files) for item in specs) == 100
+    assert len(specs) == 5
+    assert sum(len(item.files) for item in specs) == 109
     assert GENERATOR.check_assets(specs) == []
     manifest = json.loads((DEMO / "assets-manifest.json").read_text(encoding="utf-8"))
     assert manifest["license"] == "CC0-1.0 synthetic fixtures"
@@ -71,3 +71,17 @@ def test_demo_scenario_matches_expected_report_and_remains_read_only(expectation
     assert report.summary.warning_count == expectation["warning_count"]
     assert report.summary.write_count == 0
     assert Counter(item.rule_id for item in report.issues) == expectation["rule_counts"]
+    assert {item.rule_id for item in report.rules_evaluated} >= {
+        "path.allowed-roots",
+        "file.allowed-extensions",
+    }
+    if expectation["scenario_id"] == "05_delivery_boundary_preflight":
+        assert {item.affected_file for item in report.issues} == {
+            "Exports/SM_Watchtower_v004.fbx",
+            "Temp/watchtower-preview.png",
+            "Meshes/SM_Watchtower_v005.blend",
+            "Textures/T_Watchtower_source.psd",
+        }
+        assert all(item.evidence[0].observed for item in report.issues)
+        assert all(item.evidence[0].expected for item in report.issues)
+        assert all(any("\u4e00" <= char <= "\u9fff" for char in item.remediation) for item in report.issues)

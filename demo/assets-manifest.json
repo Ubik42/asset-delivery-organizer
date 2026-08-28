@@ -1,5 +1,5 @@
 {
-  "generator_version": "1.0.0",
+  "generator_version": "1.1.0",
   "license": "CC0-1.0 synthetic fixtures",
   "scenarios": [
     {
@@ -537,6 +537,60 @@
       "scenario_id": "04_nested_multi_vendor_batch",
       "title": "嵌套多供应商交付",
       "total_bytes": 155398
+    },
+    {
+      "description": "包含两处错误目录、Blender/PSD 源文件格式，以及允许忽略的 Documentation 文档。",
+      "file_count": 9,
+      "files": [
+        {
+          "relative_path": "Documentation/vendor_brief.docx",
+          "sha256": "d71b38f64d9c52b717595d97125e73d8ca55e0d66d758ed3685996a076834dc9",
+          "size_bytes": 50
+        },
+        {
+          "relative_path": "Exports/SM_Watchtower_v004.fbx",
+          "sha256": "1d9a682b5247a1de97dc4df9c8ab63b6dcdb7df3ab7c70633ceb5bd8ae9d14c2",
+          "size_bytes": 662
+        },
+        {
+          "relative_path": "Meshes/SM_Watchtower_v005.blend",
+          "sha256": "1b7124f2b4614b48198f2699376a08b67d4dafb2a05723a392425b0ab291ccd7",
+          "size_bytes": 42
+        },
+        {
+          "relative_path": "Meshes/SM_Watchtower_v005.fbx",
+          "sha256": "041d132d421ee8d6fd5d5226353df7d983a63a35ec6336d089bfcebe954cd292",
+          "size_bytes": 654
+        },
+        {
+          "relative_path": "Temp/watchtower-preview.png",
+          "sha256": "918e41696d818893efb7638303a51e7608bb93ac923844d89793f55dbfc5c1a8",
+          "size_bytes": 47879
+        },
+        {
+          "relative_path": "Textures/T_Watchtower_B.1001.png",
+          "sha256": "83c24ca1363d908b12a2d70c9d36b0aa0b2168f22c0ec54e0be49f07b8001bc0",
+          "size_bytes": 48108
+        },
+        {
+          "relative_path": "Textures/T_Watchtower_N.1001.png",
+          "sha256": "6d95bbc2cba1e90f4b946808de1f2e93432f7775a6ecee5eb92da0143bed3ee3",
+          "size_bytes": 2242
+        },
+        {
+          "relative_path": "Textures/T_Watchtower_R.1001.png",
+          "sha256": "59523f77a5a7ff3ac6ed921e717d0e2ae80fea7f02ea7f3f93222b49acf6c702",
+          "size_bytes": 1224
+        },
+        {
+          "relative_path": "Textures/T_Watchtower_source.psd",
+          "sha256": "f26ddcd99e2220dc521d05cdc8c1efe66c4c19ccf806a181d920b97f307a2a4f",
+          "size_bytes": 42
+        }
+      ],
+      "scenario_id": "05_delivery_boundary_preflight",
+      "title": "供应商交付边界预检",
+      "total_bytes": 100903
     }
   ],
   "schema_id": "asset-delivery-organizer-demo-assets/1"

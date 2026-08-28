@@ -88,10 +88,43 @@ def test_profile_workspace_saves_applies_invalidates_and_blocks_bad_fields(
     assert "模型命名正则" in window.profile_validation.text()
 
     window.profile_filename_pattern.setText(r"^SM_[A-Za-z0-9]+_v[0-9]{3}$")
+    window.profile_allowed_roots.setText("Meshes, ../escape")
+    assert window.profile_draft is None
+    assert not window.save_profile_button.isEnabled()
+    assert "允许交付目录" in window.profile_validation.text()
+    window.profile_allowed_roots.setText("Meshes, Textures")
+    window.profile_allowed_extensions.setText(".fbx, .png")
+    assert window.profile_draft is not None
     forbidden = valid_delivery / "profile.json"
     with pytest.raises(ProfileFieldError, match="交付目录之外"):
         window._save_profile_to(forbidden)
     assert not forbidden.exists()
+    window.close()
+
+
+def test_issue_rule_filter_refreshes_matching_evidence(
+    profile_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("ADO_DATA_DIR", str(tmp_path / "ui-data"))
+    _app = QApplication.instance() or QApplication([])
+    root = tmp_path / "boundary-drop"
+    (root / "Exports").mkdir(parents=True)
+    (root / "Meshes").mkdir()
+    (root / "Exports" / "SM_Tower_v001.fbx").write_bytes(b"fbx")
+    (root / "Meshes" / "SM_Tower_v001.blend").write_bytes(b"blend")
+    window = MainWindow()
+    window.configure(profile_path=profile_file, delivery_root=root)
+    loop = QEventLoop()
+    window.audit_ready.connect(loop.quit)
+    QTimer.singleShot(10_000, loop.quit)
+    window.start_audit()
+    loop.exec()
+
+    index = window.rule_filter.findData("file.allowed-extensions")
+    window.rule_filter.setCurrentIndex(index)
+    assert window.issues_table.rowCount() == 1
+    assert "SM_Tower_v001.blend" in window.issue_detail.toPlainText()
+    assert "extension" in window.issue_detail.toPlainText()
     window.close()
 
 

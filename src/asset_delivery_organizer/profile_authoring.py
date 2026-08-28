@@ -254,6 +254,10 @@ def build_profile(draft: ProfileDraft) -> DeliveryProfile:
         item.lower() if item.startswith(".") else f".{item.lower()}"
         for item in _unique(draft.allowed_extensions, "允许文件格式")
     )
+    if len(set(allowed_extensions)) != len(allowed_extensions):
+        raise ProfileFieldError("允许文件格式", "不能包含重复项")
+    if any(item in {".", ".."} or "/" in item or "\\" in item for item in allowed_extensions):
+        raise ProfileFieldError("允许文件格式", "必须填写扩展名，例如 .fbx、.png")
     ignored_format_roots = tuple(item.strip() for item in draft.ignored_format_roots if item.strip())
     if len({item.casefold() for item in ignored_format_roots}) != len(ignored_format_roots):
         raise ProfileFieldError("格式忽略目录", "不能包含重复项")

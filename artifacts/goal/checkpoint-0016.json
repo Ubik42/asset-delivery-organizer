@@ -1,0 +1,23 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 17,
+  "checkpoint": 16,
+  "completedSlice": "M6-S1",
+  "evidence": [
+    "path.allowed-roots@1.0.0 and file.allowed-extensions@1.0.0 produce stable explainable issues from file facts",
+    "Both rules are available in strict Profile JSON, versioned presets and the Chinese Profile workspace",
+    "Five immutable synthetic scenarios contain 109 files and cover valid, wrong-root, disallowed-format, nested-vendor and batch behavior",
+    "All five demo audits preserve input bytes and report write_count zero",
+    "Filtered issue evidence, invalid path configuration, success and narrow-window states have automated tests and six actual screenshots",
+    "103 automated tests, Windows Qt lifecycle and clean-wheel boundary checks pass",
+    "M6 evidence is documented in docs/M6_DELIVERY_BOUNDARY_RULES_AUDIT.md"
+  ],
+  "unresolvedRisks": [
+    "The Windows distribution must prove it does not depend on the source checkout or system Python",
+    "Version 1.1 metadata and public release identity must remain consistent across wheel, executable, capabilities and documentation",
+    "Portable packaging must preserve Qt plugins, contracts and first-run writable data paths without bundling mutable delivery fixtures as application state",
+    "No code-signing claim is allowed without a real signing certificate"
+  ],
+  "nextSlice": "M7-S1"
+}

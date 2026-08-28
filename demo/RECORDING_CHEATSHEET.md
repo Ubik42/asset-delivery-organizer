@@ -12,12 +12,12 @@ cd D:\3D\_tools\asset-delivery-organizer
 .\.venv\Scripts\ado-ui.exe
 ```
 
-预期：四行 `PASS`，文件/问题分别为 `16/0`、`12/5`、`58/0`、`14/3`。
+预期：五行 `PASS`，文件/问题分别为 `16/0`、`12/5`、`58/0`、`14/3`、`9/4`。
 
 ## 界面主线
 
-1. 项目规则：环境/角色模板、无效正则阻断、另存到交付目录之外；
-2. `work/organization-demo/supplier-drop`：三条规则全开，预期 12/5；
+1. 项目规则：目录/格式白名单、环境/角色模板、危险目录阻断、另存到交付目录之外；
+2. `05_delivery_boundary_preflight`：五条规则全开，筛选目录与格式问题，预期 9/4；
 3. 问题审查：依次展示旧版本、错误命名、缺失贴图；
 4. 文件浏览：选择贴图、仅有问题，搜索 `BrokenStatue`；
 5. `01_clean_environment_delivery`：预期 16/0；
@@ -60,7 +60,7 @@ ado .\demo\scenarios\01_clean_environment_delivery --profile .\profiles\atlas.en
 $LASTEXITCODE
 ```
 
-预期：100 个素材校验通过；危险输出退出码 `1`；没有生成 `forbidden.json`。
+预期：109 个素材校验通过；危险输出退出码 `1`；没有生成 `forbidden.json`。
 
 ## 收尾
 
@@ -69,4 +69,4 @@ ado-capabilities
 .\demo\run-demo.ps1 -Verify
 ```
 
-最后画面停在四行 PASS 和 `ReadOnly=True`。
+最后画面停在五行 PASS 和 `ReadOnly=True`。

@@ -45,6 +45,18 @@
         "texture.required-channels": 1,
         "version.latest-only": 1
       }
+    },
+    {
+      "scenario_id": "05_delivery_boundary_preflight",
+      "file_count": 9,
+      "issue_count": 4,
+      "blocker_count": 0,
+      "error_count": 4,
+      "warning_count": 0,
+      "rule_counts": {
+        "file.allowed-extensions": 2,
+        "path.allowed-roots": 2
+      }
     }
   ]
 }

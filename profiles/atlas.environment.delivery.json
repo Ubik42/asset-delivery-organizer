@@ -8,7 +8,7 @@
     {
       "rule_id": "path.allowed-roots",
       "rule_version": "1.0.0",
-      "enabled": false,
+      "enabled": true,
       "severity": "error",
       "parameters": [
         {
@@ -21,7 +21,7 @@
     {
       "rule_id": "file.allowed-extensions",
       "rule_version": "1.0.0",
-      "enabled": false,
+      "enabled": true,
       "severity": "error",
       "parameters": [
         {

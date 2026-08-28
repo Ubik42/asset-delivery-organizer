@@ -1277,6 +1277,7 @@ class MainWindow(QMainWindow):
             and (not severity or issue.severity == severity)
             and (not rule_id or issue.rule_id == rule_id)
         ]
+        self.issues_table.clearSelection()
         self.issues_table.setRowCount(len(issues))
         for index, issue in enumerate(issues):
             values = [
@@ -1293,6 +1294,7 @@ class MainWindow(QMainWindow):
                 self.issues_table.setItem(index, column, item)
         if issues:
             self.issues_table.selectRow(0)
+            self._show_issue_details()
         else:
             self.issue_detail.setPlainText("当前筛选条件下没有问题。")
 

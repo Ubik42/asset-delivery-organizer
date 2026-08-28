@@ -12,7 +12,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 DEMO = REPO / "demo"
 SCENARIOS = DEMO / "scenarios"
-GENERATOR_VERSION = "1.0.0"
+GENERATOR_VERSION = "1.1.0"
 
 
 @dataclass(frozen=True)
@@ -206,12 +206,31 @@ def nested_vendor_batch() -> ScenarioSpec:
     )
 
 
+def delivery_boundary_preflight() -> ScenarioSpec:
+    files: dict[str, bytes] = {
+        "Meshes/SM_Watchtower_v005.fbx": ascii_fbx("Watchtower", 5),
+        "Meshes/SM_Watchtower_v005.blend": b"BLENDER-v300 synthetic source placeholder\n",
+        "Textures/T_Watchtower_source.psd": b"8BPS synthetic layered-source placeholder\n",
+        "Exports/SM_Watchtower_v004.fbx": ascii_fbx("WatchtowerExport", 4),
+        "Temp/watchtower-preview.png": texture_png("WatchtowerPreview", "B", 1001),
+        "Documentation/vendor_brief.docx": b"Synthetic vendor brief; ignored by format policy.\n",
+    }
+    add_texture_set(files, "Watchtower")
+    return ScenarioSpec(
+        "05_delivery_boundary_preflight",
+        "供应商交付边界预检",
+        "包含两处错误目录、Blender/PSD 源文件格式，以及允许忽略的 Documentation 文档。",
+        files,
+    )
+
+
 def scenario_specs() -> list[ScenarioSpec]:
     return [
         clean_environment(),
         faulty_supplier_drop(),
         multi_asset_udim_batch(),
         nested_vendor_batch(),
+        delivery_boundary_preflight(),
     ]
 
 
