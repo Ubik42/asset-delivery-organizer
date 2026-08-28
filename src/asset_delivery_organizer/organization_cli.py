@@ -13,10 +13,12 @@ from .organization import (
     generate_organization_plan,
     write_organization_plan,
 )
+from .version import __version__
 
 
 def parser() -> argparse.ArgumentParser:
     value = argparse.ArgumentParser(description="安全生成或执行资产交付整理方案。")
+    value.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     commands = value.add_subparsers(dest="command", required=True)
     plan = commands.add_parser("plan", help="扫描并生成 dry-run 整理方案。")
     plan.add_argument("root", type=Path)

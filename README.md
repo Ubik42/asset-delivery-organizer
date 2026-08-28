@@ -49,7 +49,19 @@
 - SQLite 本机审计/收据索引，不保存资产内容；
 - 桌面、CLI、Python API 共用同一业务核心和合同。
 
-## 安装
+## Windows 免 Python 安装
+
+普通用户直接从 [v1.1.0 Release](https://github.com/Ubik42/asset-delivery-organizer/releases/tag/v1.1.0) 下载 `AssetDeliveryOrganizer-1.1.0-windows-x64.zip`：
+
+1. 核对 ZIP 的 SHA-256：`f71a313339041ba38d6710260f8618029d94c25a85283998ff3ea0f3077f61cf`；
+2. 完整解压，不要直接在压缩包里运行；
+3. 双击 `AssetDeliveryOrganizer.exe`。
+
+不需要安装 Python或克隆仓库。当前发行物未商业代码签名，Windows 可能显示未知发布者；完整安装、升级、卸载和数据保留说明见 [Windows 可移植版指南](docs/WINDOWS_PORTABLE_INSTALL.md)。
+
+![打包后的 1.1.0 桌面程序真实运行](docs/screenshots/workbench-portable-success.png)
+
+## 源码开发安装
 
 支持 Windows 与 Python 3.11+：
 
@@ -201,11 +213,11 @@ Python / Skill ──┘          │
 
 Profile 工作区额外覆盖模板漂移、严格导入、重复规则、危险目录、重复格式、无效正则、重复通道、交付目录内保存拒绝、已有目标保护、保存后 CLI 重载和旧审计失效。
 
-发布证据见 [1.0.0 发布审计](docs/RELEASE_AUDIT_1.0.0.md) 与 [M6 交付边界规则验收](docs/M6_DELIVERY_BOUNDARY_RULES_AUDIT.md)，完整录制流程见 [演示录制脚本](docs/VIDEO_TUTORIAL.md)。
+发布证据见 [1.1.0 发布审计](docs/RELEASE_AUDIT_1.1.0.md) 与 [M6 交付边界规则验收](docs/M6_DELIVERY_BOUNDARY_RULES_AUDIT.md)，完整录制流程见 [演示录制脚本](docs/VIDEO_TUTORIAL.md)。
 
 ## 当前边界
 
-当前 `main` 分支是 1.1 开发线：已完成 1.0.0 的独立资产交付能力、可视化 Profile 工作区以及目录/格式边界规则；正式 1.1 分发包将在 M7 发布验收后生成。本项目不是对原 AutoSort 全部 DCC 内功能的复刻，以下能力不在本仓库中冒充完成：
+当前 `main` 分支为已验收的 1.1.0：包含独立资产交付能力、可视化 Profile 工作区、五条确定性规则和免 Python Windows 发行包。本项目不是对原 AutoSort 全部 DCC 内功能的复刻，以下能力不在本仓库中冒充完成：
 
 - Maya/Arnold 材质节点网络写入；
 - Maya、Blender、Houdini、3ds Max 内嵌面板；

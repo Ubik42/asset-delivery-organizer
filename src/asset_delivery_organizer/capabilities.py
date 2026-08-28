@@ -5,10 +5,11 @@ from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
-from .audit import SCANNER_ID, SCANNER_VERSION
+from .audit import SCANNER_ID
 from .profile_authoring import PROFILE_PRESETS
 from .rules import SUPPORTED_RULES
 from .scanner import ScanLimits
+from .version import __version__
 
 
 class StrictCapability(BaseModel):
@@ -115,7 +116,7 @@ def current_capabilities() -> CapabilityManifest:
     return CapabilityManifest(
         schema_id="asset-delivery-organizer-capabilities/1",
         tool_id=SCANNER_ID,
-        tool_version=SCANNER_VERSION,
+        tool_version=__version__,
         mode="audit-and-approved-organization",
         interfaces=["desktop-ui", "cli", "python-api"],
         contracts=ContractCapabilities(

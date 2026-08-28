@@ -116,7 +116,7 @@
   },
   "schema_id": "asset-delivery-organizer-capabilities/1",
   "tool_id": "asset-delivery-organizer",
-  "tool_version": "1.0.0",
+  "tool_version": "1.1.0",
   "unsupported": [
     "dcc-adapter.execute",
     "file.delete",

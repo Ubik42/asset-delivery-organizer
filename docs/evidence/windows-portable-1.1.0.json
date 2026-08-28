@@ -1,0 +1,77 @@
+{
+  "schema": "asset-delivery-organizer-portable-verification/1",
+  "status": "passed",
+  "archive": "AssetDeliveryOrganizer-1.1.0-windows-x64.zip",
+  "archive_sha256": "f71a313339041ba38d6710260f8618029d94c25a85283998ff3ea0f3077f61cf",
+  "extracted_outside_repository": true,
+  "python_environment_cleared": true,
+  "versions": {
+    "cli": "ado.exe 1.1.0",
+    "organizer": "ado-organize.exe 1.1.0"
+  },
+  "windows_product_version": "1.1.0",
+  "capability_version": "1.1.0",
+  "scenario_results": [
+    {
+      "scenario": "01_clean_environment_delivery",
+      "files": true,
+      "issues": true,
+      "rules": true,
+      "read_only": true
+    },
+    {
+      "scenario": "02_supplier_drop_with_issues",
+      "files": true,
+      "issues": true,
+      "rules": true,
+      "read_only": true
+    },
+    {
+      "scenario": "03_multi_asset_udim_batch",
+      "files": true,
+      "issues": true,
+      "rules": true,
+      "read_only": true
+    },
+    {
+      "scenario": "04_nested_multi_vendor_batch",
+      "files": true,
+      "issues": true,
+      "rules": true,
+      "read_only": true
+    },
+    {
+      "scenario": "05_delivery_boundary_preflight",
+      "files": true,
+      "issues": true,
+      "rules": true,
+      "read_only": true
+    }
+  ],
+  "immutable_demo_unchanged": true,
+  "organization": {
+    "planned_operations": 3,
+    "executed_operations": 3,
+    "post_issues": 2
+  },
+  "gui_runs": [
+    {
+      "run": 1,
+      "pid": 52424,
+      "elapsed_seconds": 2.93,
+      "screenshot_bytes": 82984,
+      "closed": true
+    },
+    {
+      "run": 2,
+      "pid": 41508,
+      "elapsed_seconds": 1.526,
+      "screenshot_bytes": 82984,
+      "closed": true
+    }
+  ],
+  "existing_gui_pids_before": [],
+  "existing_gui_pids_missing_after": [],
+  "v1_history_preserved": true,
+  "history_outside_application_and_delivery": true
+}

@@ -10,6 +10,7 @@ from .audit import audit_delivery, load_profile
 from .report_io import atomic_write_report, safe_external_target, write_report_json
 from .rules import RuleConfigurationError
 from .scanner import ScanError, ScanLimits
+from .version import __version__
 
 
 def positive_integer(value: str) -> int:
@@ -26,6 +27,7 @@ def parser() -> argparse.ArgumentParser:
     value = argparse.ArgumentParser(
         description="Read-only audit of an art asset delivery directory."
     )
+    value.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     value.add_argument("root", type=Path, help="Delivery directory to scan recursively.")
     value.add_argument(
         "--profile", type=Path, required=True, help="art-delivery-profile/1 JSON file."

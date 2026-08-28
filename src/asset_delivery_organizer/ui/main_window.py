@@ -66,6 +66,7 @@ from ..profile_authoring import (
 )
 from ..report_io import atomic_write_report
 from ..scanner import ScanError
+from ..version import __version__
 from .theme import APP_STYLE
 
 
@@ -118,7 +119,7 @@ class MainWindow(QMainWindow):
 
     def __init__(self) -> None:
         super().__init__()
-        self.setWindowTitle("Asset Delivery Organizer")
+        self.setWindowTitle(f"Asset Delivery Organizer {__version__}")
         self.setMinimumSize(1080, 680)
         self.resize(1440, 900)
         self.setStyleSheet(APP_STYLE)
@@ -180,7 +181,7 @@ class MainWindow(QMainWindow):
         product_name = QLabel("Asset Delivery Organizer", objectName="ProductName")
         product_name.setMinimumWidth(300)
         title_box.addWidget(product_name)
-        title_box.addWidget(QLabel("资产交付审阅台", objectName="ProductSubtitle"))
+        title_box.addWidget(QLabel(f"资产交付审阅台 · v{__version__}", objectName="ProductSubtitle"))
         layout.addLayout(title_box)
         layout.addStretch()
         self.header_context = QLabel("尚未载入交付", objectName="Muted")

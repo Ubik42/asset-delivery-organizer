@@ -2,6 +2,10 @@
 
 ## 1. 安装与启动
 
+普通 Windows 用户下载 v1.1.0 ZIP，完整解压后双击 `AssetDeliveryOrganizer.exe`，无需 Python。发行物未商业代码签名，首次启动可能出现未知发布者提示；请从公开 Release 下载并核对 SHA-256。升级、卸载与历史数据保留见 [Windows 可移植版指南](WINDOWS_PORTABLE_INSTALL.md)。
+
+源码开发方式：
+
 ```powershell
 cd D:\3D\_tools\asset-delivery-organizer
 python -m venv .venv
@@ -10,6 +14,8 @@ python -m venv .venv
 ```
 
 工作台包含交付设置、项目规则、文件浏览、问题审查、整理方案、审计记录和报告导出七个步骤。
+
+![打包后的 1.1.0 成功审计](screenshots/workbench-portable-success.png)
 
 ## 2. 准备安全演示副本
 

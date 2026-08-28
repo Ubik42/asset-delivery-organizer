@@ -4,6 +4,8 @@
 
 ## 录制前准备
 
+面向用户的成片先展示从 v1.1.0 Release 下载 ZIP、核对 SHA-256、完整解压并双击 `AssetDeliveryOrganizer.exe`。不要在视频里要求普通用户安装 Python。下面命令只供录制者重置演示副本和跑开发门禁：
+
 ```powershell
 cd D:\3D\_tools\asset-delivery-organizer
 .\.venv\Scripts\python.exe -m pip install -e ".[ui,dev]"
@@ -13,6 +15,8 @@ cd D:\3D\_tools\asset-delivery-organizer
 ```
 
 建议 1920×1080、显示缩放 100% 或 125%，关闭个人通知。演示只操作 `work\organization-demo`，不要直接整理 `demo/scenarios`。
+
+先拍摄打包程序顶部的 `v1.1.0`、内置 Profile 和演示素材，再进入后续镜头。安装、未知发布者提示、升级与卸载口径统一参考 [Windows 可移植版指南](WINDOWS_PORTABLE_INSTALL.md)。
 
 ## 镜头 1：真实问题，约 45 秒
 

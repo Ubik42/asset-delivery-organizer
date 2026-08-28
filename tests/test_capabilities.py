@@ -7,6 +7,7 @@ from pathlib import Path
 from asset_delivery_organizer.capabilities import CapabilityManifest, current_capabilities
 from asset_delivery_organizer.rules import SUPPORTED_RULES
 from asset_delivery_organizer.scanner import ScanLimits
+from asset_delivery_organizer.version import __version__
 
 REPO = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location(
@@ -23,6 +24,7 @@ def test_checked_in_capabilities_match_runtime() -> None:
 
 def test_manifest_covers_contracts_rules_limits_and_safety() -> None:
     manifest = current_capabilities()
+    assert manifest.tool_version == __version__ == "1.1.0"
     assert manifest.contracts.accepts == ["art-delivery-profile/1"]
     assert manifest.contracts.emits == ["art-delivery-audit-report/1"]
     assert {item.rule_id for item in manifest.rules} == SUPPORTED_RULES

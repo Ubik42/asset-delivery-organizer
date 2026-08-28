@@ -5,9 +5,12 @@ import os
 import sys
 from pathlib import Path
 
+from .version import __version__
+
 
 def parser() -> argparse.ArgumentParser:
     value = argparse.ArgumentParser(description="启动 Asset Delivery Organizer 中文工作台。")
+    value.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     value.add_argument("--root", type=Path, help="预先载入的交付目录。")
     value.add_argument("--profile", type=Path, help="预先载入的 Profile JSON。")
     value.add_argument("--screenshot", type=Path, help="完成审计后保存界面截图并退出。")
@@ -72,8 +75,12 @@ def run(argv: list[str] | None = None) -> int:
 
         from .ui.fonts import configure_application_font
         from .ui.main_window import MainWindow
-    except ImportError:
-        sys.stderr.write("缺少图形界面依赖。请运行：pip install 'asset-delivery-organizer[ui]'\n")
+    except ImportError as exc:
+        missing = exc.name or str(exc)
+        sys.stderr.write(
+            "图形界面依赖未能载入。源码安装请运行："
+            f"pip install 'asset-delivery-organizer[ui]'；缺失模块：{missing}\n"
+        )
         return 1
 
     app = QApplication(sys.argv[:1])
