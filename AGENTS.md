@@ -1,11 +1,38 @@
-# Development rules
+# Asset Delivery Organizer 开发规则
 
-- Start by reading `config/goal-state.json`, its `lastCheckpoint`, and `docs/CODEX_GOAL.md`.
-- Run `scripts/goal.ps1 -Action Doctor` before implementation and `scripts/validate.ps1 -Tier quick` before advancing state.
-- `config/goal-state.json` is the progress source of truth. Validation command strings are documentation only and must never be executed dynamically.
-- Keep the core runnable without a DCC installation.
-- File mutations require a dry-run plan, collision checks, and post-run verification.
-- Put host-specific code behind adapters; do not duplicate the core UI per DCC.
-- Treat `docs/REFERENCE_BRIEF.md` as requirements inspiration, not implemented evidence.
-- Auditing remains strictly read-only. Organization may mutate only an explicitly approved plan after full preflight, must never overwrite a target, must roll back partial work, write its receipt outside the delivery root, and run a post-audit.
-- Never mutate `demo/scenarios`; copy fixtures into `work/` or another generated workspace before organization tests or demonstrations.
+## 产品与语言
+
+- 本仓库面向国内技术美术团队、求职作品展示和中文读者；桌面界面、GitHub README、教程、错误提示与截图说明均以自然的简体中文为主。
+- 保留必须精确复制的命令、协议字段、路径、规则 ID 和 DCC/API 名称，不为了“科技感”堆砌英文。
+- 功能复杂度必须来自真实生产问题、安全边界和可验证结果，不为了作品集强行加入 Agent、云服务、数据库或 DCC Adapter。
+
+## 每轮 `/goal` 启动协议
+
+1. 运行 `scripts/goal.ps1 -Action Resume` 和 `scripts/goal.ps1 -Action Doctor`。
+2. 完整读取 `config/goal-state.json`、其 `lastCheckpoint`、`docs/CODEX_GOAL.md`、Git 状态和当前切片直接相关的代码/测试/文档。
+3. 如果状态、代码、测试或发布证据互相矛盾，先修复事实源，禁止带着错误状态继续开发。
+4. 一次只实现 `nextSlice`；写入范围不得超出 `allowedPaths`，并严格遵守 `nonGoals`。
+5. 状态中的命令只作为固定审阅清单，禁止从 JSON 动态拼接或执行命令。
+
+## 实现与安全
+
+- 核心保持无 DCC 依赖；宿主特有能力只允许通过薄 Adapter 接入，不复制核心规则和完整 UI。
+- 审计严格只读。任何文件整理必须先生成可审阅计划，完成路径、源哈希、重复操作和目标冲突预检，再由用户明确批准。
+- 不静默覆盖、不提供删除动作；部分失败必须回滚，成功后必须复检并把收据写在交付目录之外。
+- `demo/scenarios` 是不可变夹具；整理测试与演示必须先复制到 `work/` 或其他生成目录。
+- 业务核心与 PySide6 UI 分离；成功、失败、边界和恢复路径必须有自动化测试。
+
+## 真实场景、素材与截图
+
+- 每个可展示版本至少覆盖标准成功、常见错误/阻断、批量或边界、处理前后对比。
+- 测试素材只能来自许可证清晰且允许使用的公开社区资源，或仓库中可重复生成的合成素材；必须记录来源、许可证、用途和校验值。
+- 禁止提交公司内部资产、隐私数据或授权不明的网络素材。
+- UI 功能变更必须生成实际运行截图，覆盖完整主界面、输入/配置、问题证据、成功结果、失败阻断和窄窗口；不得用设计稿冒充运行证据。
+- 桌面版本发布前运行真实 Windows Qt 短生命周期验证，只关闭本次测试创建且 PID 明确匹配的进程，不影响用户已有会话。
+
+## 切片完成与状态推进
+
+- 完成当前切片前运行 `scripts/validate.ps1 -Tier quick`，并按风险补跑演示、GUI 生命周期与干净安装审计。
+- 只有全部 acceptance 有直接证据时，才增加 `stateRevision`、写入下一个顺序 checkpoint 并推进唯一 `nextSlice`。
+- 一次失败不等于阻塞；先诊断并尝试安全替代。确实阻塞时写清阻塞条件、已尝试方案和恢复条件。
+- 不把未在真实环境验证的能力写成“已完成”，不修改历史发布证据来掩盖新的回归。

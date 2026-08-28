@@ -34,7 +34,7 @@ def _activate(state: dict) -> None:
     for milestone in state["milestones"]:
         milestone["status"] = "in_progress" if milestone["id"] == current else "completed"
     state["nextSlice"] = {
-        "id": f"{current}-test",
+        "id": f"{current}-S99",
         "milestone": current,
         "outcome": "Exercise active-state validation.",
         "risk": "R0",
@@ -69,6 +69,42 @@ def test_rejects_allowed_path_traversal(tmp_path: Path) -> None:
     state["nextSlice"]["allowedPaths"].append("../other-repo/**")
     _write(repo, state)
     assert any("unsafe allowed path" in item for item in MODULE.audit(repo))
+
+
+def test_rejects_unknown_goal_status(tmp_path: Path) -> None:
+    repo, state = _sandbox(tmp_path)
+    state["status"] = "completed"
+    _write(repo, state)
+    assert any("unknown goal status" in item for item in MODULE.audit(repo))
+
+
+def test_malformed_types_return_errors_instead_of_crashing(tmp_path: Path) -> None:
+    repo, state = _sandbox(tmp_path)
+    state["status"] = ["active"]
+    state["milestones"][0]["dependencies"] = [{"bad": "shape"}]
+    state["nextSlice"] = "keep going"
+    _write(repo, state)
+    errors = MODULE.audit(repo)
+    assert any("unknown goal status" in item for item in errors)
+    assert any("dependencies" in item for item in errors)
+    assert any("nextSlice must be" in item for item in errors)
+
+
+def test_rejects_malformed_slice_id(tmp_path: Path) -> None:
+    repo, state = _sandbox(tmp_path)
+    _activate(state)
+    state["nextSlice"]["id"] = "keep-going"
+    _write(repo, state)
+    assert any("M<number>-S<number>" in item for item in MODULE.audit(repo))
+
+
+def test_rejects_checkpoint_filename_payload_mismatch(tmp_path: Path) -> None:
+    repo, state = _sandbox(tmp_path)
+    checkpoint = json.loads((repo / state["lastCheckpoint"]).read_text(encoding="utf-8"))
+    checkpoint["checkpoint"] += 1
+    (repo / state["lastCheckpoint"]).write_text(json.dumps(checkpoint), encoding="utf-8")
+    _write(repo, state)
+    assert any("checkpoint number" in item for item in MODULE.audit(repo))
 
 
 def test_complete_goal_rejects_incomplete_milestone(tmp_path: Path) -> None:

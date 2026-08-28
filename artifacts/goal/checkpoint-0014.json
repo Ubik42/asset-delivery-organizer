@@ -1,0 +1,20 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 15,
+  "checkpoint": 14,
+  "completedSlice": "M4-S1",
+  "evidence": [
+    "Repository main is clean and synchronized with public GitHub commit 848bd57",
+    "The 1.0 baseline passes 79 automated tests, demo drift verification and clean-wheel release audit",
+    "README, product, design, user guide, recording guide, release evidence, contracts, capabilities and current implementation were reviewed before selecting the next milestone",
+    "The existing goal validator accepted the invalid terminal status 'completed'; M5 starts by hardening status, slice and checkpoint validation",
+    "The most valuable DCC-independent production gap is visual Profile authoring; users currently need to edit JSON to adapt rules to a real project"
+  ],
+  "unresolvedRisks": [
+    "Profile edits must invalidate reports and organization plans created from the previous Profile digest",
+    "Saving reusable configuration must never write into an audited delivery root",
+    "Preset convenience must not weaken strict art-delivery-profile/1 validation"
+  ],
+  "nextSlice": "M5-S1"
+}
