@@ -10,7 +10,13 @@ from pathlib import Path
 from typing import Literal
 
 from .audit import canonical_profile_bytes, load_profile
-from .contracts import DeliveryProfile, EffectiveParameter, ParameterSource, RuleActivation
+from .contracts import (
+    DeliveryProfile,
+    EffectiveParameter,
+    ParameterSource,
+    RuleActivation,
+    portable_relative_path,
+)
 from .report_io import safe_external_target
 from .rules import SUPPORTED_RULES
 
@@ -31,6 +37,13 @@ class ProfileDraft:
     profile_version: str
     project_id: str
     asset_categories: tuple[str, ...]
+    roots_enabled: bool
+    roots_severity: Severity
+    allowed_roots: tuple[str, ...]
+    formats_enabled: bool
+    formats_severity: Severity
+    allowed_extensions: tuple[str, ...]
+    ignored_format_roots: tuple[str, ...]
     filename_enabled: bool
     filename_severity: Severity
     filename_pattern: str
@@ -63,6 +76,13 @@ PROFILE_PRESETS: tuple[ProfilePreset, ...] = (
             profile_version="1.0.0",
             project_id="project",
             asset_categories=("environment",),
+            roots_enabled=True,
+            roots_severity="error",
+            allowed_roots=("Meshes", "Textures", "Documentation", "Source"),
+            formats_enabled=True,
+            formats_severity="error",
+            allowed_extensions=(".fbx", ".obj", ".usd", ".abc", ".png", ".tif", ".exr"),
+            ignored_format_roots=("Documentation",),
             filename_enabled=True,
             filename_severity="error",
             filename_pattern=r"^SM_[A-Za-z0-9]+_v[0-9]{3}$",
@@ -85,6 +105,13 @@ PROFILE_PRESETS: tuple[ProfilePreset, ...] = (
             profile_version="1.0.0",
             project_id="project",
             asset_categories=("character",),
+            roots_enabled=True,
+            roots_severity="error",
+            allowed_roots=("Meshes", "Textures", "Documentation", "Source"),
+            formats_enabled=True,
+            formats_severity="error",
+            allowed_extensions=(".fbx", ".usd", ".abc", ".png", ".tif", ".exr"),
+            ignored_format_roots=("Documentation",),
             filename_enabled=True,
             filename_severity="error",
             filename_pattern=r"^SK_[A-Za-z0-9]+_v[0-9]{3}$",
@@ -148,6 +175,19 @@ def draft_from_profile(profile: DeliveryProfile) -> ProfileDraft:
     if missing:
         raise ProfileFieldError("检查规则", f"缺少规则：{', '.join(missing)}")
 
+    roots = rules["path.allowed-roots"]
+    allowed_roots = _parameter(roots, "roots", list, "允许交付目录")
+    if not all(isinstance(item, str) for item in allowed_roots):
+        raise ProfileFieldError("允许交付目录", "必须是相对目录列表")
+
+    formats = rules["file.allowed-extensions"]
+    allowed_extensions = _parameter(formats, "extensions", list, "允许文件格式")
+    if not all(isinstance(item, str) for item in allowed_extensions):
+        raise ProfileFieldError("允许文件格式", "必须是扩展名列表")
+    ignored_roots = _parameter(formats, "ignored_roots", list, "格式忽略目录")
+    if not all(isinstance(item, str) for item in ignored_roots):
+        raise ProfileFieldError("格式忽略目录", "必须是相对目录列表")
+
     filename = rules["filename.pattern"]
     pattern = _parameter(filename, "pattern", str, "模型命名正则")
     try:
@@ -173,6 +213,13 @@ def draft_from_profile(profile: DeliveryProfile) -> ProfileDraft:
         profile_version=profile.profile_version,
         project_id=profile.project_id,
         asset_categories=_unique(tuple(profile.asset_categories), "资产类别"),
+        roots_enabled=roots.enabled,
+        roots_severity=_severity(roots.severity, "目录规则级别"),
+        allowed_roots=_unique(tuple(allowed_roots), "允许交付目录"),
+        formats_enabled=formats.enabled,
+        formats_severity=_severity(formats.severity, "格式规则级别"),
+        allowed_extensions=_unique(tuple(allowed_extensions), "允许文件格式"),
+        ignored_format_roots=tuple(item.strip() for item in ignored_roots if item.strip()),
         filename_enabled=filename.enabled,
         filename_severity=_severity(filename.severity, "命名规则级别"),
         filename_pattern=pattern,
@@ -194,8 +241,22 @@ def build_profile(draft: ProfileDraft) -> DeliveryProfile:
     if not re.fullmatch(r"[a-z0-9][a-z0-9._-]{1,79}", draft.project_id):
         raise ProfileFieldError("项目代码", "使用至少 2 位小写字母、数字、点、下划线或连字符")
     categories = _unique(draft.asset_categories, "资产类别")
-    if not any((draft.filename_enabled, draft.texture_enabled, draft.version_enabled)):
+    if not any((draft.roots_enabled, draft.formats_enabled, draft.filename_enabled, draft.texture_enabled, draft.version_enabled)):
         raise ProfileFieldError("检查规则", "至少启用一条规则")
+    allowed_roots = _unique(draft.allowed_roots, "允许交付目录")
+    for root in (*allowed_roots, *draft.ignored_format_roots):
+        try:
+            portable_relative_path(root)
+        except ValueError as exc:
+            field = "允许交付目录" if root in allowed_roots else "格式忽略目录"
+            raise ProfileFieldError(field, "必须填写安全的交付相对目录") from exc
+    allowed_extensions = tuple(
+        item.lower() if item.startswith(".") else f".{item.lower()}"
+        for item in _unique(draft.allowed_extensions, "允许文件格式")
+    )
+    ignored_format_roots = tuple(item.strip() for item in draft.ignored_format_roots if item.strip())
+    if len({item.casefold() for item in ignored_format_roots}) != len(ignored_format_roots):
+        raise ProfileFieldError("格式忽略目录", "不能包含重复项")
     try:
         re.compile(draft.filename_pattern)
     except re.error as exc:
@@ -224,6 +285,23 @@ def build_profile(draft: ProfileDraft) -> DeliveryProfile:
         project_id=draft.project_id,
         asset_categories=list(categories),
         rules=[
+            RuleActivation(
+                rule_id="path.allowed-roots",
+                rule_version="1.0.0",
+                enabled=draft.roots_enabled,
+                severity=_severity(draft.roots_severity, "目录规则级别"),
+                parameters=[parameter("roots", list(allowed_roots))],
+            ),
+            RuleActivation(
+                rule_id="file.allowed-extensions",
+                rule_version="1.0.0",
+                enabled=draft.formats_enabled,
+                severity=_severity(draft.formats_severity, "格式规则级别"),
+                parameters=[
+                    parameter("extensions", list(allowed_extensions)),
+                    parameter("ignored_roots", list(ignored_format_roots)),
+                ],
+            ),
             RuleActivation(
                 rule_id="filename.pattern",
                 rule_version="1.0.0",

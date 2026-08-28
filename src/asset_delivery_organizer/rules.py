@@ -5,10 +5,18 @@ import re
 from collections import defaultdict
 from pathlib import PurePosixPath
 
-from .contracts import DeliveryFileFact, DeliveryIssue, IssueEvidence, RuleActivation
+from .contracts import (
+    DeliveryFileFact,
+    DeliveryIssue,
+    IssueEvidence,
+    RuleActivation,
+    portable_relative_path,
+)
 
 SUPPORTED_RULES = {
+    "file.allowed-extensions",
     "filename.pattern",
+    "path.allowed-roots",
     "texture.required-channels",
     "version.latest-only",
 }
@@ -31,6 +39,118 @@ def _parameter(rule: RuleActivation, name: str, expected_type: type):
 def _issue_id(rule: RuleActivation, path: str, discriminator: str) -> str:
     value = f"{rule.rule_id}|{rule.rule_version}|{path}|{discriminator}"
     return f"issue-{hashlib.sha256(value.encode('utf-8')).hexdigest()[:20]}"
+
+
+def _portable_roots(rule: RuleActivation, name: str, *, allow_empty: bool = False) -> list[str]:
+    parameter = _parameter(rule, name, list)
+    if (not allow_empty and not parameter.value) or not all(
+        isinstance(item, str) and item.strip() for item in parameter.value
+    ):
+        qualifier = "" if allow_empty else " non-empty"
+        raise RuleConfigurationError(f"{rule.rule_id}.{name} must be a{qualifier} string array")
+    roots: list[str] = []
+    for value in parameter.value:
+        normalized = value.strip().replace("\\", "/").strip("/")
+        try:
+            portable_relative_path(normalized)
+        except ValueError as exc:
+            raise RuleConfigurationError(
+                f"{rule.rule_id}.{name} contains an unsafe path"
+            ) from exc
+        path = PurePosixPath(normalized)
+        roots.append(path.as_posix())
+    if len({item.casefold() for item in roots}) != len(roots):
+        raise RuleConfigurationError(f"{rule.rule_id}.{name} contains duplicates")
+    return roots
+
+
+def _is_under_root(path: PurePosixPath, root: str) -> bool:
+    root_parts = tuple(part.casefold() for part in PurePosixPath(root).parts)
+    path_parts = tuple(part.casefold() for part in path.parts)
+    return len(path_parts) > len(root_parts) and path_parts[: len(root_parts)] == root_parts
+
+
+def _path_allowed_roots(rule: RuleActivation, files: list[DeliveryFileFact]) -> list[DeliveryIssue]:
+    roots_parameter = _parameter(rule, "roots", list)
+    roots = _portable_roots(rule, "roots")
+    issues = []
+    for fact in files:
+        path = PurePosixPath(fact.relative_path)
+        if any(_is_under_root(path, root) for root in roots):
+            continue
+        issues.append(
+            DeliveryIssue(
+                issue_id=_issue_id(rule, fact.relative_path, "allowed-roots"),
+                rule_id=rule.rule_id,
+                rule_version=rule.rule_version,
+                severity=rule.severity,
+                affected_file=fact.relative_path,
+                evidence=[IssueEvidence(
+                    field="delivery_root",
+                    observed=path.parts[0],
+                    expected=roots,
+                    detail="文件不在项目允许的交付目录中。",
+                )],
+                effective_parameters=[roots_parameter],
+                message="文件位于未获项目规则允许的交付目录。",
+                remediation="将目录问题交由负责人确认；如需移动，必须另行生成并批准整理计划。",
+                auto_fix="plan_only",
+            )
+        )
+    return issues
+
+
+def _file_allowed_extensions(
+    rule: RuleActivation, files: list[DeliveryFileFact]
+) -> list[DeliveryIssue]:
+    extensions_parameter = _parameter(rule, "extensions", list)
+    if not extensions_parameter.value or not all(
+        isinstance(item, str) and item.strip() for item in extensions_parameter.value
+    ):
+        raise RuleConfigurationError(
+            "file.allowed-extensions.extensions must be a non-empty string array"
+        )
+    extensions = sorted({
+        item.casefold() if item.startswith(".") else f".{item.casefold()}"
+        for item in extensions_parameter.value
+    })
+    if any(item in {".", ".."} or "/" in item or "\\" in item for item in extensions):
+        raise RuleConfigurationError("file.allowed-extensions.extensions contains an invalid extension")
+    ignored_parameter = rule.parameter("ignored_roots")
+    ignored_roots: list[str] = []
+    effective_parameters = [extensions_parameter]
+    if ignored_parameter is not None:
+        ignored_roots = _portable_roots(rule, "ignored_roots", allow_empty=True)
+        effective_parameters.append(ignored_parameter)
+
+    issues = []
+    for fact in files:
+        path = PurePosixPath(fact.relative_path)
+        if any(_is_under_root(path, root) for root in ignored_roots):
+            continue
+        observed = path.suffix.casefold()
+        if observed in extensions:
+            continue
+        issues.append(
+            DeliveryIssue(
+                issue_id=_issue_id(rule, fact.relative_path, observed or "no-extension"),
+                rule_id=rule.rule_id,
+                rule_version=rule.rule_version,
+                severity=rule.severity,
+                affected_file=fact.relative_path,
+                evidence=[IssueEvidence(
+                    field="extension",
+                    observed=observed or "（无扩展名）",
+                    expected=extensions,
+                    detail="文件格式不在当前项目允许的交付格式中。",
+                )],
+                effective_parameters=effective_parameters,
+                message="检测到项目未允许的文件格式。",
+                remediation="确认文件用途；不要直接删除，需由负责人决定补充白名单或另行处理。",
+                auto_fix="none",
+            )
+        )
+    return issues
 
 
 def _filename_pattern(rule: RuleActivation, files: list[DeliveryFileFact]) -> list[DeliveryIssue]:
@@ -191,7 +311,9 @@ def evaluate_rules(
                 f"unsupported rule version: {rule.rule_id}@{rule.rule_version}"
             )
         evaluator = {
+            "file.allowed-extensions": _file_allowed_extensions,
             "filename.pattern": _filename_pattern,
+            "path.allowed-roots": _path_allowed_roots,
             "texture.required-channels": _texture_channels,
             "version.latest-only": _version_latest_only,
         }[rule.rule_id]

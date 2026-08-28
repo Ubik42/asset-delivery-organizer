@@ -27,7 +27,7 @@ def test_versioned_presets_build_strict_runtime_profiles() -> None:
         profile = build_profile(preset.draft)
         assert profile.schema_id == "art-delivery-profile/1"
         assert profile.profile_version == "1.0.0"
-        assert len(profile.rules) == 3
+        assert len(profile.rules) == 5
         assert draft_from_profile(profile) == preset.draft
 
 
@@ -68,8 +68,10 @@ def test_existing_profile_round_trips_through_authoring_core(profile_file: Path)
         (
             "检查规则",
             replace(
-                preset_by_id("environment-standard").draft,
-                filename_enabled=False,
+                    preset_by_id("environment-standard").draft,
+                    roots_enabled=False,
+                    formats_enabled=False,
+                    filename_enabled=False,
                 texture_enabled=False,
                 version_enabled=False,
             ),

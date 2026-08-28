@@ -17,6 +17,35 @@ def profile_data() -> dict:
         "asset_categories": ["environment"],
         "rules": [
             {
+                "rule_id": "path.allowed-roots",
+                "rule_version": "1.0.0",
+                "enabled": True,
+                "severity": "error",
+                "parameters": [{
+                    "name": "roots",
+                    "value": ["Meshes", "Textures"],
+                    "source": {"kind": "project_profile", "reference": reference},
+                }],
+            },
+            {
+                "rule_id": "file.allowed-extensions",
+                "rule_version": "1.0.0",
+                "enabled": True,
+                "severity": "error",
+                "parameters": [
+                    {
+                        "name": "extensions",
+                        "value": [".fbx", ".png"],
+                        "source": {"kind": "project_profile", "reference": reference},
+                    },
+                    {
+                        "name": "ignored_roots",
+                        "value": [],
+                        "source": {"kind": "project_profile", "reference": reference},
+                    },
+                ],
+            },
+            {
                 "rule_id": "filename.pattern",
                 "rule_version": "1.0.0",
                 "enabled": True,

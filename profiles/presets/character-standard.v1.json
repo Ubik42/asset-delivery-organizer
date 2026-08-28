@@ -3,25 +3,127 @@
   "profile_id": "project.character.delivery",
   "profile_version": "1.0.0",
   "project_id": "project",
-  "asset_categories": ["character"],
+  "asset_categories": [
+    "character"
+  ],
   "rules": [
     {
-      "rule_id": "filename.pattern", "rule_version": "1.0.0", "enabled": true, "severity": "error",
+      "rule_id": "path.allowed-roots",
+      "rule_version": "1.0.0",
+      "enabled": true,
+      "severity": "error",
       "parameters": [
-        {"name": "pattern", "value": "^SK_[A-Za-z0-9]+_v[0-9]{3}$", "source": {"kind": "project_profile", "reference": "project.character.delivery@1.0.0"}},
-        {"name": "extensions", "value": [".fbx", ".usd", ".abc"], "source": {"kind": "project_profile", "reference": "project.character.delivery@1.0.0"}}
+        {
+          "name": "roots",
+          "value": [
+            "Meshes",
+            "Textures",
+            "Documentation",
+            "Source"
+          ],
+          "source": {
+            "kind": "project_profile",
+            "reference": "project.character.delivery@1.0.0"
+          }
+        }
       ]
     },
     {
-      "rule_id": "texture.required-channels", "rule_version": "1.0.0", "enabled": true, "severity": "blocker",
+      "rule_id": "file.allowed-extensions",
+      "rule_version": "1.0.0",
+      "enabled": true,
+      "severity": "error",
       "parameters": [
-        {"name": "channels", "value": ["B", "N", "R", "M"], "source": {"kind": "project_profile", "reference": "project.character.delivery@1.0.0"}}
+        {
+          "name": "extensions",
+          "value": [
+            ".fbx",
+            ".usd",
+            ".abc",
+            ".png",
+            ".tif",
+            ".exr"
+          ],
+          "source": {
+            "kind": "project_profile",
+            "reference": "project.character.delivery@1.0.0"
+          }
+        },
+        {
+          "name": "ignored_roots",
+          "value": [
+            "Documentation"
+          ],
+          "source": {
+            "kind": "project_profile",
+            "reference": "project.character.delivery@1.0.0"
+          }
+        }
       ]
     },
     {
-      "rule_id": "version.latest-only", "rule_version": "1.0.0", "enabled": true, "severity": "warning",
+      "rule_id": "filename.pattern",
+      "rule_version": "1.0.0",
+      "enabled": true,
+      "severity": "error",
       "parameters": [
-        {"name": "keep_versions", "value": 2, "source": {"kind": "project_profile", "reference": "project.character.delivery@1.0.0"}}
+        {
+          "name": "pattern",
+          "value": "^SK_[A-Za-z0-9]+_v[0-9]{3}$",
+          "source": {
+            "kind": "project_profile",
+            "reference": "project.character.delivery@1.0.0"
+          }
+        },
+        {
+          "name": "extensions",
+          "value": [
+            ".fbx",
+            ".usd",
+            ".abc"
+          ],
+          "source": {
+            "kind": "project_profile",
+            "reference": "project.character.delivery@1.0.0"
+          }
+        }
+      ]
+    },
+    {
+      "rule_id": "texture.required-channels",
+      "rule_version": "1.0.0",
+      "enabled": true,
+      "severity": "blocker",
+      "parameters": [
+        {
+          "name": "channels",
+          "value": [
+            "B",
+            "N",
+            "R",
+            "M"
+          ],
+          "source": {
+            "kind": "project_profile",
+            "reference": "project.character.delivery@1.0.0"
+          }
+        }
+      ]
+    },
+    {
+      "rule_id": "version.latest-only",
+      "rule_version": "1.0.0",
+      "enabled": true,
+      "severity": "warning",
+      "parameters": [
+        {
+          "name": "keep_versions",
+          "value": 2,
+          "source": {
+            "kind": "project_profile",
+            "reference": "project.character.delivery@1.0.0"
+          }
+        }
       ]
     }
   ]

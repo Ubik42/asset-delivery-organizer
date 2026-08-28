@@ -391,6 +391,38 @@ class MainWindow(QMainWindow):
         identity_layout.setColumnStretch(3, 1)
         editor_layout.addWidget(identity_box)
 
+        roots_box = QGroupBox("交付目录边界")
+        roots_layout = QGridLayout(roots_box)
+        self.profile_roots_enabled = QCheckBox("启用目录白名单检查")
+        self.profile_roots_severity = self._severity_combo("error")
+        self.profile_allowed_roots = QLineEdit()
+        self.profile_allowed_roots.setPlaceholderText("Meshes, Textures, Documentation, Source")
+        roots_layout.addWidget(self.profile_roots_enabled, 0, 0)
+        roots_layout.addWidget(QLabel("问题级别"), 0, 2)
+        roots_layout.addWidget(self.profile_roots_severity, 0, 3)
+        roots_layout.addWidget(QLabel("允许目录"), 1, 0)
+        roots_layout.addWidget(self.profile_allowed_roots, 1, 1, 1, 3)
+        roots_layout.setColumnStretch(1, 1)
+        editor_layout.addWidget(roots_box)
+
+        formats_box = QGroupBox("交付文件格式")
+        formats_layout = QGridLayout(formats_box)
+        self.profile_formats_enabled = QCheckBox("启用格式白名单检查")
+        self.profile_formats_severity = self._severity_combo("error")
+        self.profile_allowed_extensions = QLineEdit()
+        self.profile_allowed_extensions.setPlaceholderText(".fbx, .usd, .png, .exr")
+        self.profile_ignored_format_roots = QLineEdit()
+        self.profile_ignored_format_roots.setPlaceholderText("Documentation")
+        formats_layout.addWidget(self.profile_formats_enabled, 0, 0)
+        formats_layout.addWidget(QLabel("问题级别"), 0, 2)
+        formats_layout.addWidget(self.profile_formats_severity, 0, 3)
+        formats_layout.addWidget(QLabel("允许格式"), 1, 0)
+        formats_layout.addWidget(self.profile_allowed_extensions, 1, 1, 1, 3)
+        formats_layout.addWidget(QLabel("忽略目录"), 2, 0)
+        formats_layout.addWidget(self.profile_ignored_format_roots, 2, 1, 1, 3)
+        formats_layout.setColumnStretch(1, 1)
+        editor_layout.addWidget(formats_box)
+
         filename_box = QGroupBox("模型命名规范")
         filename_layout = QGridLayout(filename_box)
         self.profile_filename_enabled = QCheckBox("启用命名检查")
@@ -457,6 +489,9 @@ class MainWindow(QMainWindow):
             "Profile 版本": self.profile_version_edit,
             "项目代码": self.profile_project_edit,
             "资产类别": self.profile_categories_edit,
+            "允许交付目录": self.profile_allowed_roots,
+            "允许文件格式": self.profile_allowed_extensions,
+            "格式忽略目录": self.profile_ignored_format_roots,
             "模型命名正则": self.profile_filename_pattern,
             "模型格式": self.profile_filename_extensions,
             "必需贴图通道": self.profile_texture_channels,
@@ -467,18 +502,25 @@ class MainWindow(QMainWindow):
             self.profile_version_edit,
             self.profile_project_edit,
             self.profile_categories_edit,
+            self.profile_allowed_roots,
+            self.profile_allowed_extensions,
+            self.profile_ignored_format_roots,
             self.profile_filename_pattern,
             self.profile_filename_extensions,
             self.profile_texture_channels,
         ):
             widget.textChanged.connect(self._validate_profile_form)
         for check in (
+            self.profile_roots_enabled,
+            self.profile_formats_enabled,
             self.profile_filename_enabled,
             self.profile_texture_enabled,
             self.profile_version_enabled,
         ):
             check.toggled.connect(self._validate_profile_form)
         for combo in (
+            self.profile_roots_severity,
+            self.profile_formats_severity,
             self.profile_filename_severity,
             self.profile_texture_severity,
             self.profile_version_severity,
@@ -732,6 +774,13 @@ class MainWindow(QMainWindow):
             profile_version=self.profile_version_edit.text().strip(),
             project_id=self.profile_project_edit.text().strip(),
             asset_categories=values(self.profile_categories_edit),
+            roots_enabled=self.profile_roots_enabled.isChecked(),
+            roots_severity=str(self.profile_roots_severity.currentData()),
+            allowed_roots=values(self.profile_allowed_roots),
+            formats_enabled=self.profile_formats_enabled.isChecked(),
+            formats_severity=str(self.profile_formats_severity.currentData()),
+            allowed_extensions=values(self.profile_allowed_extensions),
+            ignored_format_roots=values(self.profile_ignored_format_roots),
             filename_enabled=self.profile_filename_enabled.isChecked(),
             filename_severity=str(self.profile_filename_severity.currentData()),
             filename_pattern=self.profile_filename_pattern.text().strip(),
@@ -772,7 +821,7 @@ class MainWindow(QMainWindow):
             self.save_profile_button.setEnabled(False)
             return
         self._set_profile_validation(
-            f"配置有效 · {self.profile_draft.profile_id}@{self.profile_draft.profile_version} · 3 条规则",
+            f"配置有效 · {self.profile_draft.profile_id}@{self.profile_draft.profile_version} · 5 条规则",
             "valid",
         )
         self.save_profile_button.setEnabled(True)
@@ -784,6 +833,17 @@ class MainWindow(QMainWindow):
             self.profile_version_edit.setText(draft.profile_version)
             self.profile_project_edit.setText(draft.project_id)
             self.profile_categories_edit.setText(", ".join(draft.asset_categories))
+            self.profile_roots_enabled.setChecked(draft.roots_enabled)
+            self.profile_roots_severity.setCurrentIndex(
+                self.profile_roots_severity.findData(draft.roots_severity)
+            )
+            self.profile_allowed_roots.setText(", ".join(draft.allowed_roots))
+            self.profile_formats_enabled.setChecked(draft.formats_enabled)
+            self.profile_formats_severity.setCurrentIndex(
+                self.profile_formats_severity.findData(draft.formats_severity)
+            )
+            self.profile_allowed_extensions.setText(", ".join(draft.allowed_extensions))
+            self.profile_ignored_format_roots.setText(", ".join(draft.ignored_format_roots))
             self.profile_filename_enabled.setChecked(draft.filename_enabled)
             self.profile_filename_severity.setCurrentIndex(
                 self.profile_filename_severity.findData(draft.filename_severity)
@@ -1238,7 +1298,9 @@ class MainWindow(QMainWindow):
 
     def _localized_issue_message(self, issue: DeliveryIssue) -> str:
         return {
+            "file.allowed-extensions": "文件格式不在项目允许范围内",
             "filename.pattern": "文件名不符合当前项目规则",
+            "path.allowed-roots": "文件位于未允许的交付目录",
             "texture.required-channels": "贴图集合缺少必需通道",
             "version.latest-only": "目录中仍保留旧版本",
         }.get(issue.rule_id, issue.message)
@@ -1258,7 +1320,9 @@ class MainWindow(QMainWindow):
         for item in issue.evidence:
             evidence.append(f"字段：{item.field}\n观测值：{item.observed}\n期望值：{item.expected}")
         remediation = {
+            "file.allowed-extensions": "确认文件用途；不要直接删除，由负责人决定补充白名单或另行处理。",
             "filename.pattern": "先核对命名字段；如需改名，应另行生成并批准变更计划。",
+            "path.allowed-roots": "核对目录用途；如需移动，必须另行生成并批准整理计划。",
             "texture.required-channels": "补齐缺失贴图通道后重新扫描。",
             "version.latest-only": "确认交付版本后，通过后续安全整理计划归档旧版本。",
         }.get(issue.rule_id, issue.remediation)

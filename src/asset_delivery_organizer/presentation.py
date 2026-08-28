@@ -8,7 +8,9 @@ from .audit import canonical_profile_bytes
 from .contracts import DeliveryAuditReport, DeliveryFileFact, DeliveryIssue, DeliveryProfile
 
 RULE_LABELS = {
+    "file.allowed-extensions": "交付格式白名单",
     "filename.pattern": "命名规范",
+    "path.allowed-roots": "交付目录白名单",
     "texture.required-channels": "贴图通道完整性",
     "version.latest-only": "仅保留最新版本",
 }

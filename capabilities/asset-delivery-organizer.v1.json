@@ -40,10 +40,25 @@
   "rules": [
     {
       "parameters": [
+        "extensions",
+        "ignored_roots?"
+      ],
+      "rule_id": "file.allowed-extensions",
+      "rule_version": "1.0.0"
+    },
+    {
+      "parameters": [
         "pattern",
         "extensions?"
       ],
       "rule_id": "filename.pattern",
+      "rule_version": "1.0.0"
+    },
+    {
+      "parameters": [
+        "roots"
+      ],
+      "rule_id": "path.allowed-roots",
       "rule_version": "1.0.0"
     },
     {

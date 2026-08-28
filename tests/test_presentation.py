@@ -19,8 +19,8 @@ def test_rule_selection_changes_effective_profile_digest(profile_file: Path) -> 
     effective, digest = profile_with_rule_selection(profile, {"filename.pattern"})
 
     assert digest != original_digest
-    assert [rule.enabled for rule in effective.rules] == [True, False, False]
-    assert [rule.enabled for rule in profile.rules] == [True, True, True]
+    assert [rule.enabled for rule in effective.rules] == [False, False, True, False, False]
+    assert [rule.enabled for rule in profile.rules] == [True, True, True, True, True]
 
 
 def test_rule_selection_rejects_empty_or_unknown(profile_file: Path) -> None:

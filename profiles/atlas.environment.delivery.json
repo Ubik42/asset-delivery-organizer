@@ -6,6 +6,37 @@
   "asset_categories": ["environment"],
   "rules": [
     {
+      "rule_id": "path.allowed-roots",
+      "rule_version": "1.0.0",
+      "enabled": false,
+      "severity": "error",
+      "parameters": [
+        {
+          "name": "roots",
+          "value": ["Meshes", "Textures", "Documentation", "Vendor_A", "Vendor_B"],
+          "source": {"kind": "project_profile", "reference": "atlas.environment.delivery@1.0.0"}
+        }
+      ]
+    },
+    {
+      "rule_id": "file.allowed-extensions",
+      "rule_version": "1.0.0",
+      "enabled": false,
+      "severity": "error",
+      "parameters": [
+        {
+          "name": "extensions",
+          "value": [".fbx", ".usd", ".png", ".txt", ".csv"],
+          "source": {"kind": "project_profile", "reference": "atlas.environment.delivery@1.0.0"}
+        },
+        {
+          "name": "ignored_roots",
+          "value": ["Documentation"],
+          "source": {"kind": "project_profile", "reference": "atlas.environment.delivery@1.0.0"}
+        }
+      ]
+    },
+    {
       "rule_id": "filename.pattern",
       "rule_version": "1.0.0",
       "enabled": true,

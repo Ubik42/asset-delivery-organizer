@@ -102,7 +102,9 @@ class CapabilityManifest(StrictCapability):
 
 
 RULE_PARAMETERS = {
+    "file.allowed-extensions": ["extensions", "ignored_roots?"],
     "filename.pattern": ["pattern", "extensions?"],
+    "path.allowed-roots": ["roots"],
     "texture.required-channels": ["channels"],
     "version.latest-only": ["keep_versions"],
 }

@@ -9,7 +9,7 @@ from asset_delivery_organizer.contracts import DeliveryFileFact, DeliveryProfile
 def test_valid_art_delivery_profile(profile_data: dict) -> None:
     profile = DeliveryProfile.model_validate(profile_data)
     assert profile.schema_id == "art-delivery-profile/1"
-    assert len(profile.rules) == 3
+    assert len(profile.rules) == 5
 
 
 @pytest.mark.parametrize(
