@@ -1,0 +1,28 @@
+{
+  "schema_id": "art-delivery-profile/1",
+  "profile_id": "project.environment.delivery",
+  "profile_version": "1.0.0",
+  "project_id": "project",
+  "asset_categories": ["environment"],
+  "rules": [
+    {
+      "rule_id": "filename.pattern", "rule_version": "1.0.0", "enabled": true, "severity": "error",
+      "parameters": [
+        {"name": "pattern", "value": "^SM_[A-Za-z0-9]+_v[0-9]{3}$", "source": {"kind": "project_profile", "reference": "project.environment.delivery@1.0.0"}},
+        {"name": "extensions", "value": [".fbx", ".obj", ".usd", ".abc"], "source": {"kind": "project_profile", "reference": "project.environment.delivery@1.0.0"}}
+      ]
+    },
+    {
+      "rule_id": "texture.required-channels", "rule_version": "1.0.0", "enabled": true, "severity": "blocker",
+      "parameters": [
+        {"name": "channels", "value": ["B", "N", "R"], "source": {"kind": "project_profile", "reference": "project.environment.delivery@1.0.0"}}
+      ]
+    },
+    {
+      "rule_id": "version.latest-only", "rule_version": "1.0.0", "enabled": true, "severity": "warning",
+      "parameters": [
+        {"name": "keep_versions", "value": 1, "source": {"kind": "project_profile", "reference": "project.environment.delivery@1.0.0"}}
+      ]
+    }
+  ]
+}

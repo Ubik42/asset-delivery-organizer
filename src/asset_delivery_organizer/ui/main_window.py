@@ -21,6 +21,8 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QProgressBar,
     QPushButton,
+    QScrollArea,
+    QSpinBox,
     QSplitter,
     QStackedWidget,
     QTableWidget,
@@ -29,7 +31,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from ..audit import audit_delivery, load_profile
+from ..audit import audit_delivery
 from ..contracts import DeliveryAuditReport, DeliveryIssue, DeliveryProfile
 from ..history import DeliveryMetadata, HistoryStore
 from ..organization import (
@@ -51,6 +53,16 @@ from ..presentation import (
     filter_file_rows,
     human_size,
     profile_with_rule_selection,
+)
+from ..profile_authoring import (
+    PROFILE_PRESETS,
+    ProfileDraft,
+    ProfileFieldError,
+    build_profile,
+    draft_from_profile,
+    load_profile_for_authoring,
+    preset_by_id,
+    save_profile,
 )
 from ..report_io import atomic_write_report
 from ..scanner import ScanError
@@ -125,6 +137,9 @@ class MainWindow(QMainWindow):
         self.worker: AuditWorker | None = None
         self.organization_thread: QThread | None = None
         self.organization_worker: OrganizationWorker | None = None
+        self.profile_draft: DeliveryProfile | None = None
+        self._updating_profile_form = False
+        self._updating_rules = False
         self._build_ui()
         self._restore_paths()
 
@@ -141,6 +156,7 @@ class MainWindow(QMainWindow):
         body.addWidget(self._build_sidebar())
         self.pages = QStackedWidget()
         self.pages.addWidget(self._build_setup_page())
+        self.pages.addWidget(self._build_profile_page())
         self.pages.addWidget(self._build_files_page())
         self.pages.addWidget(self._build_issues_page())
         self.pages.addWidget(self._build_organization_page())
@@ -185,11 +201,12 @@ class MainWindow(QMainWindow):
         self.navigation.addItems(
             [
                 "① 交付设置",
-                "② 文件浏览",
-                "③ 问题审查",
-                "④ 整理方案",
-                "⑤ 审计记录",
-                "⑥ 报告导出",
+                "② 项目规则",
+                "③ 文件浏览",
+                "④ 问题审查",
+                "⑤ 整理方案",
+                "⑥ 审计记录",
+                "⑦ 报告导出",
             ]
         )
         self.navigation.setCurrentRow(0)
@@ -298,6 +315,179 @@ class MainWindow(QMainWindow):
         self.scan_button.clicked.connect(self.start_audit)
         actions.addWidget(self.scan_button)
         layout.addLayout(actions)
+        return page
+
+    def _severity_combo(self, current: str) -> QComboBox:
+        combo = QComboBox()
+        for label, value in (
+            ("提示", "info"),
+            ("警告", "warning"),
+            ("错误", "error"),
+            ("阻断", "blocker"),
+        ):
+            combo.addItem(label, value)
+        index = combo.findData(current)
+        combo.setCurrentIndex(max(index, 0))
+        return combo
+
+    def _build_profile_page(self) -> QWidget:
+        page, layout = self._page_shell(
+            "项目规则",
+            "从生产模板开始配置项目命名、贴图集合和版本策略。只有合同完整且运行时支持的 Profile 才能保存并应用。",
+        )
+
+        template_panel = QFrame(objectName="Panel")
+        template_layout = QHBoxLayout(template_panel)
+        template_layout.setContentsMargins(16, 14, 16, 14)
+        template_layout.addWidget(QLabel("规则模板"))
+        self.profile_preset_combo = QComboBox()
+        for preset in PROFILE_PRESETS:
+            self.profile_preset_combo.addItem(
+                f"{preset.name_cn}  ·  v{preset.preset_version}", preset.preset_id
+            )
+        template_layout.addWidget(self.profile_preset_combo)
+        self.profile_preset_description = QLabel(objectName="Muted")
+        self.profile_preset_description.setWordWrap(True)
+        template_layout.addWidget(self.profile_preset_description, 1)
+        self.apply_preset_button = QPushButton("从模板新建")
+        self.apply_preset_button.clicked.connect(self._apply_profile_preset)
+        template_layout.addWidget(self.apply_preset_button)
+        self.import_profile_button = QPushButton("导入现有 Profile")
+        self.import_profile_button.clicked.connect(self._import_profile_for_editing)
+        template_layout.addWidget(self.import_profile_button)
+        layout.addWidget(template_panel)
+
+        scroll = QScrollArea()
+        scroll.setWidgetResizable(True)
+        scroll.setFrameShape(QFrame.Shape.NoFrame)
+        editor = QWidget(objectName="ProfileEditor")
+        editor_layout = QVBoxLayout(editor)
+        editor_layout.setContentsMargins(0, 0, 0, 0)
+        editor_layout.setSpacing(12)
+
+        identity_box = QGroupBox("Profile 身份")
+        identity_layout = QGridLayout(identity_box)
+        identity_layout.setHorizontalSpacing(12)
+        identity_layout.setVerticalSpacing(10)
+        self.profile_id_edit = QLineEdit()
+        self.profile_id_edit.setPlaceholderText("例如 atlas.environment.delivery")
+        self.profile_version_edit = QLineEdit()
+        self.profile_version_edit.setPlaceholderText("例如 1.1.0")
+        self.profile_project_edit = QLineEdit()
+        self.profile_project_edit.setPlaceholderText("例如 atlas")
+        self.profile_categories_edit = QLineEdit()
+        self.profile_categories_edit.setPlaceholderText("environment, prop")
+        identity_fields = [
+            ("Profile ID", self.profile_id_edit),
+            ("版本", self.profile_version_edit),
+            ("项目代码", self.profile_project_edit),
+            ("资产类别", self.profile_categories_edit),
+        ]
+        for index, (label, widget) in enumerate(identity_fields):
+            row, pair = divmod(index, 2)
+            identity_layout.addWidget(QLabel(label), row, pair * 2)
+            identity_layout.addWidget(widget, row, pair * 2 + 1)
+        identity_layout.setColumnStretch(1, 1)
+        identity_layout.setColumnStretch(3, 1)
+        editor_layout.addWidget(identity_box)
+
+        filename_box = QGroupBox("模型命名规范")
+        filename_layout = QGridLayout(filename_box)
+        self.profile_filename_enabled = QCheckBox("启用命名检查")
+        self.profile_filename_severity = self._severity_combo("error")
+        self.profile_filename_pattern = QLineEdit()
+        self.profile_filename_pattern.setFont(QFont("Cascadia Mono", 10))
+        self.profile_filename_pattern.setPlaceholderText(r"^SM_[A-Za-z0-9]+_v[0-9]{3}$")
+        self.profile_filename_extensions = QLineEdit()
+        self.profile_filename_extensions.setPlaceholderText(".fbx, .obj, .usd, .abc")
+        filename_layout.addWidget(self.profile_filename_enabled, 0, 0)
+        filename_layout.addWidget(QLabel("问题级别"), 0, 2)
+        filename_layout.addWidget(self.profile_filename_severity, 0, 3)
+        filename_layout.addWidget(QLabel("文件名正则"), 1, 0)
+        filename_layout.addWidget(self.profile_filename_pattern, 1, 1, 1, 3)
+        filename_layout.addWidget(QLabel("检查格式"), 2, 0)
+        filename_layout.addWidget(self.profile_filename_extensions, 2, 1, 1, 3)
+        filename_layout.setColumnStretch(1, 1)
+        editor_layout.addWidget(filename_box)
+
+        texture_box = QGroupBox("贴图集合完整性")
+        texture_layout = QGridLayout(texture_box)
+        self.profile_texture_enabled = QCheckBox("启用贴图通道检查")
+        self.profile_texture_severity = self._severity_combo("blocker")
+        self.profile_texture_channels = QLineEdit()
+        self.profile_texture_channels.setPlaceholderText("B, N, R")
+        texture_layout.addWidget(self.profile_texture_enabled, 0, 0)
+        texture_layout.addWidget(QLabel("问题级别"), 0, 2)
+        texture_layout.addWidget(self.profile_texture_severity, 0, 3)
+        texture_layout.addWidget(QLabel("必需通道"), 1, 0)
+        texture_layout.addWidget(self.profile_texture_channels, 1, 1, 1, 3)
+        texture_layout.setColumnStretch(1, 1)
+        editor_layout.addWidget(texture_box)
+
+        version_box = QGroupBox("历史版本策略")
+        version_layout = QGridLayout(version_box)
+        self.profile_version_enabled = QCheckBox("启用旧版本检查")
+        self.profile_version_severity = self._severity_combo("warning")
+        self.profile_keep_versions = QSpinBox()
+        self.profile_keep_versions.setRange(0, 99)
+        self.profile_keep_versions.setSuffix(" 个版本")
+        version_layout.addWidget(self.profile_version_enabled, 0, 0)
+        version_layout.addWidget(QLabel("问题级别"), 0, 2)
+        version_layout.addWidget(self.profile_version_severity, 0, 3)
+        version_layout.addWidget(QLabel("同组保留"), 1, 0)
+        version_layout.addWidget(self.profile_keep_versions, 1, 1)
+        version_layout.setColumnStretch(1, 1)
+        editor_layout.addWidget(version_box)
+        editor_layout.addStretch()
+        scroll.setWidget(editor)
+        layout.addWidget(scroll, 1)
+
+        footer = QHBoxLayout()
+        self.profile_validation = QLabel("选择模板或导入现有 Profile。", objectName="ProfileValidation")
+        self.profile_validation.setWordWrap(True)
+        footer.addWidget(self.profile_validation, 1)
+        self.save_profile_button = QPushButton("另存并应用 Profile", objectName="PrimaryButton")
+        self.save_profile_button.setEnabled(False)
+        self.save_profile_button.clicked.connect(self._save_profile_from_editor)
+        footer.addWidget(self.save_profile_button)
+        layout.addLayout(footer)
+
+        self.profile_field_widgets = {
+            "Profile ID": self.profile_id_edit,
+            "Profile 版本": self.profile_version_edit,
+            "项目代码": self.profile_project_edit,
+            "资产类别": self.profile_categories_edit,
+            "模型命名正则": self.profile_filename_pattern,
+            "模型格式": self.profile_filename_extensions,
+            "必需贴图通道": self.profile_texture_channels,
+            "保留版本数": self.profile_keep_versions,
+        }
+        for widget in (
+            self.profile_id_edit,
+            self.profile_version_edit,
+            self.profile_project_edit,
+            self.profile_categories_edit,
+            self.profile_filename_pattern,
+            self.profile_filename_extensions,
+            self.profile_texture_channels,
+        ):
+            widget.textChanged.connect(self._validate_profile_form)
+        for check in (
+            self.profile_filename_enabled,
+            self.profile_texture_enabled,
+            self.profile_version_enabled,
+        ):
+            check.toggled.connect(self._validate_profile_form)
+        for combo in (
+            self.profile_filename_severity,
+            self.profile_texture_severity,
+            self.profile_version_severity,
+        ):
+            combo.currentIndexChanged.connect(self._validate_profile_form)
+        self.profile_keep_versions.valueChanged.connect(self._validate_profile_form)
+        self.profile_preset_combo.currentIndexChanged.connect(self._update_preset_description)
+        self._update_preset_description()
+        self._populate_profile_form(preset_by_id("environment-standard").draft)
         return page
 
     def _build_files_page(self) -> QWidget:
@@ -529,6 +719,171 @@ class MainWindow(QMainWindow):
         layout.addLayout(action)
         return page
 
+    def _update_preset_description(self) -> None:
+        preset = preset_by_id(str(self.profile_preset_combo.currentData()))
+        self.profile_preset_description.setText(preset.description_cn)
+
+    def _draft_from_profile_form(self) -> ProfileDraft:
+        def values(edit: QLineEdit) -> tuple[str, ...]:
+            return tuple(item.strip() for item in edit.text().split(",") if item.strip())
+
+        return ProfileDraft(
+            profile_id=self.profile_id_edit.text().strip(),
+            profile_version=self.profile_version_edit.text().strip(),
+            project_id=self.profile_project_edit.text().strip(),
+            asset_categories=values(self.profile_categories_edit),
+            filename_enabled=self.profile_filename_enabled.isChecked(),
+            filename_severity=str(self.profile_filename_severity.currentData()),
+            filename_pattern=self.profile_filename_pattern.text().strip(),
+            filename_extensions=values(self.profile_filename_extensions),
+            texture_enabled=self.profile_texture_enabled.isChecked(),
+            texture_severity=str(self.profile_texture_severity.currentData()),
+            texture_channels=values(self.profile_texture_channels),
+            version_enabled=self.profile_version_enabled.isChecked(),
+            version_severity=str(self.profile_version_severity.currentData()),
+            keep_versions=self.profile_keep_versions.value(),
+        )
+
+    def _refresh_profile_field_style(self, widget: QWidget, invalid: bool) -> None:
+        widget.setProperty("invalid", invalid)
+        widget.style().unpolish(widget)
+        widget.style().polish(widget)
+
+    def _set_profile_validation(self, text: str, status: str) -> None:
+        self.profile_validation.setText(text)
+        self.profile_validation.setProperty("status", status)
+        self.profile_validation.style().unpolish(self.profile_validation)
+        self.profile_validation.style().polish(self.profile_validation)
+
+    @Slot()
+    def _validate_profile_form(self) -> None:
+        if self._updating_profile_form:
+            return
+        for widget in self.profile_field_widgets.values():
+            self._refresh_profile_field_style(widget, False)
+        try:
+            self.profile_draft = build_profile(self._draft_from_profile_form())
+        except ProfileFieldError as exc:
+            self.profile_draft = None
+            widget = self.profile_field_widgets.get(exc.field)
+            if widget is not None:
+                self._refresh_profile_field_style(widget, True)
+            self._set_profile_validation(f"需要修正 · {exc}", "invalid")
+            self.save_profile_button.setEnabled(False)
+            return
+        self._set_profile_validation(
+            f"配置有效 · {self.profile_draft.profile_id}@{self.profile_draft.profile_version} · 3 条规则",
+            "valid",
+        )
+        self.save_profile_button.setEnabled(True)
+
+    def _populate_profile_form(self, draft: ProfileDraft) -> None:
+        self._updating_profile_form = True
+        try:
+            self.profile_id_edit.setText(draft.profile_id)
+            self.profile_version_edit.setText(draft.profile_version)
+            self.profile_project_edit.setText(draft.project_id)
+            self.profile_categories_edit.setText(", ".join(draft.asset_categories))
+            self.profile_filename_enabled.setChecked(draft.filename_enabled)
+            self.profile_filename_severity.setCurrentIndex(
+                self.profile_filename_severity.findData(draft.filename_severity)
+            )
+            self.profile_filename_pattern.setText(draft.filename_pattern)
+            self.profile_filename_extensions.setText(", ".join(draft.filename_extensions))
+            self.profile_texture_enabled.setChecked(draft.texture_enabled)
+            self.profile_texture_severity.setCurrentIndex(
+                self.profile_texture_severity.findData(draft.texture_severity)
+            )
+            self.profile_texture_channels.setText(", ".join(draft.texture_channels))
+            self.profile_version_enabled.setChecked(draft.version_enabled)
+            self.profile_version_severity.setCurrentIndex(
+                self.profile_version_severity.findData(draft.version_severity)
+            )
+            self.profile_keep_versions.setValue(draft.keep_versions)
+        finally:
+            self._updating_profile_form = False
+        self._validate_profile_form()
+
+    @Slot()
+    def _apply_profile_preset(self) -> None:
+        preset = preset_by_id(str(self.profile_preset_combo.currentData()))
+        self._populate_profile_form(preset.draft)
+        self._set_profile_validation(
+            f"已载入“{preset.name_cn}”模板；请修改项目身份后另存并应用。", "valid"
+        )
+
+    @Slot()
+    def _import_profile_for_editing(self) -> None:
+        selected, _ = QFileDialog.getOpenFileName(
+            self, "导入项目规则 Profile", self.profile_edit.text(), "JSON Profile (*.json)"
+        )
+        if not selected:
+            return
+        try:
+            profile, _digest = load_profile_for_authoring(Path(selected))
+            self.configure(profile_path=Path(selected))
+            self._populate_profile_form(draft_from_profile(profile))
+        except (OSError, ValueError, ProfileFieldError) as exc:
+            self._show_error(
+                "Profile 无法导入",
+                f"{exc}\n\n当前 Profile 和已有审计没有改变，请修正文件后重试。",
+            )
+            return
+        self.navigation.setCurrentRow(1)
+        self.status_message.setText(f"已导入并应用 Profile：{profile.profile_id}")
+
+    def _save_profile_to(self, destination: Path, *, overwrite: bool = False) -> Path:
+        profile = build_profile(self._draft_from_profile_form())
+        saved, _digest = save_profile(
+            profile,
+            destination,
+            audited_root=self.delivery_root,
+            overwrite=overwrite,
+        )
+        self.configure(profile_path=saved)
+        self._populate_profile_form(draft_from_profile(profile))
+        return saved
+
+    @Slot()
+    def _save_profile_from_editor(self) -> None:
+        if self.profile_draft is None:
+            self._validate_profile_form()
+            if self.profile_draft is None:
+                return
+        base = self.profile_path.parent if self.profile_path else Path.cwd() / "profiles"
+        default_path = base / f"{self.profile_draft.profile_id}.json"
+        selected, _ = QFileDialog.getSaveFileName(
+            self, "另存项目规则 Profile", str(default_path), "JSON Profile (*.json)"
+        )
+        if not selected:
+            return
+        destination = Path(selected)
+        if destination.suffix.lower() != ".json":
+            destination = destination.with_suffix(".json")
+        overwrite = False
+        if destination.exists():
+            choice = QMessageBox.warning(
+                self,
+                "确认覆盖 Profile",
+                f"目标文件已经存在：\n{destination}\n\n是否用当前已验证配置覆盖？",
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                QMessageBox.StandardButton.No,
+            )
+            if choice != QMessageBox.StandardButton.Yes:
+                return
+            overwrite = True
+        try:
+            saved = self._save_profile_to(destination, overwrite=overwrite)
+        except (OSError, ValueError, ProfileFieldError) as exc:
+            self._show_error(
+                "Profile 未保存",
+                f"{exc}\n\n没有修改当前交付目录；请选择交付目录之外的位置。",
+            )
+            return
+        self._set_profile_validation(f"已保存并应用 · {saved}", "valid")
+        self.status_message.setText("Profile 已更新；请重新扫描后再生成整理方案。")
+        QMessageBox.information(self, "Profile 已保存", f"项目规则已验证并保存到：\n{saved}")
+
     def _restore_paths(self) -> None:
         profile = self.settings.value("lastProfile", "")
         root = self.settings.value("lastRoot", "")
@@ -539,6 +894,29 @@ class MainWindow(QMainWindow):
             self.configure(delivery_root=Path(str(root)))
         if output:
             self.organization_output_edit.setText(str(output))
+
+    def _invalidate_audit_state(self, reason: str) -> None:
+        if self.report is None and self.organization_plan is None:
+            return
+        self.report = None
+        self.effective_profile = None
+        self.file_rows = []
+        self.organization_plan = None
+        self.files_table.setRowCount(0)
+        self.issues_table.setRowCount(0)
+        self.plan_table.setRowCount(0)
+        self.file_detail.clear()
+        self.issue_detail.clear()
+        self.report_summary.clear()
+        self.export_button.setEnabled(False)
+        self.generate_plan_button.setEnabled(False)
+        self.execute_plan_button.setEnabled(False)
+        self.summary_passed.setText("等待重新扫描")
+        self.summary_warning.setText("警告 0")
+        self.summary_error.setText("错误/阻断 0")
+        self.plan_status.setText("Profile 已变化，请重新扫描后生成方案。")
+        self.plan_safety.setText("旧审计和旧整理计划已失效。")
+        self.status_message.setText(reason)
 
     def configure(
         self,
@@ -554,13 +932,19 @@ class MainWindow(QMainWindow):
             if not self.asset_edit.text():
                 self.asset_edit.setText(self.delivery_root.name)
         if profile_path is not None:
-            profile, digest = load_profile(profile_path.resolve(strict=True))
-            self.profile_path = profile_path.resolve(strict=True)
+            resolved_profile = profile_path.resolve(strict=True)
+            profile, digest = load_profile_for_authoring(resolved_profile)
+            if self.profile_digest and digest != self.profile_digest:
+                self._invalidate_audit_state(
+                    "Profile 内容已经变化；旧审计与整理计划已失效，请重新扫描。"
+                )
+            self.profile_path = resolved_profile
             self.profile = profile
             self.profile_digest = digest
             self.profile_edit.setText(str(self.profile_path))
             self.settings.setValue("lastProfile", str(self.profile_path))
             self._populate_rules()
+            self._populate_profile_form(draft_from_profile(profile))
             if not self.project_edit.text():
                 self.project_edit.setText(profile.project_id)
         if organization_output is not None:
@@ -581,6 +965,7 @@ class MainWindow(QMainWindow):
         )
 
     def _populate_rules(self) -> None:
+        self._updating_rules = True
         while self.rules_layout.count():
             item = self.rules_layout.takeAt(0)
             if item.widget():
@@ -588,16 +973,25 @@ class MainWindow(QMainWindow):
         self.rule_checks.clear()
         if self.profile is None:
             self.rules_layout.addWidget(QLabel("尚未载入 Profile", objectName="Muted"))
+            self._updating_rules = False
             return
         for rule in self.profile.rules:
             check = QCheckBox(f"{RULE_LABELS.get(rule.rule_id, rule.rule_id)}  ·  {SEVERITY_LABELS[rule.severity]}")
             check.setChecked(rule.enabled)
             check.setToolTip(f"{rule.rule_id}@{rule.rule_version}")
+            check.toggled.connect(self._active_rule_selection_changed)
             self.rule_checks[rule.rule_id] = check
             self.rules_layout.addWidget(check)
         self.profile_summary.setText(
             f"项目 {self.profile.project_id}  ·  Profile {self.profile.profile_id}@{self.profile.profile_version}  ·  {len(self.profile.rules)} 条规则"
         )
+        self._updating_rules = False
+
+    @Slot()
+    def _active_rule_selection_changed(self) -> None:
+        if self._updating_rules:
+            return
+        self._invalidate_audit_state("本次启用规则已经变化；旧审计与整理计划已失效，请重新扫描。")
 
     def _update_context(self) -> None:
         root_name = self.delivery_root.name if self.delivery_root else "尚未选择交付"
@@ -631,7 +1025,15 @@ class MainWindow(QMainWindow):
             if not root.is_dir():
                 raise ValueError("交付目录必须是文件夹")
             profile_path = Path(self.profile_edit.text()).resolve(strict=True)
-            profile, _ = load_profile(profile_path)
+            profile, base_digest = load_profile_for_authoring(profile_path)
+            if self.profile_digest and base_digest != self.profile_digest:
+                self._invalidate_audit_state(
+                    "磁盘上的 Profile 已变化；旧审计与整理计划已失效，请重新扫描。"
+                )
+                self.profile = profile
+                self.profile_digest = base_digest
+                self._populate_rules()
+                self._populate_profile_form(draft_from_profile(profile))
             selected = {rule_id for rule_id, check in self.rule_checks.items() if check.isChecked()}
             if not self.rule_checks:
                 self.configure(profile_path=profile_path)
@@ -682,7 +1084,7 @@ class MainWindow(QMainWindow):
                 report, self.delivery_root, self._delivery_metadata()
             )
             self._refresh_history()
-        self.navigation.setCurrentRow(2 if report.issues else 1)
+        self.navigation.setCurrentRow(3 if report.issues else 2)
         self.status_message.setText(
             f"检查完成：{report.summary.file_count} 个文件，{report.summary.issue_count} 个问题，输入写入 0 次。"
         )
@@ -1030,7 +1432,7 @@ class MainWindow(QMainWindow):
         self.status_message.setText(
             f"整理和复检完成，收据已保存到输入目录之外：{receipt.receipt_path}"
         )
-        self.navigation.setCurrentRow(4)
+        self.navigation.setCurrentRow(5)
         self.organization_ready.emit()
 
     @Slot(str)

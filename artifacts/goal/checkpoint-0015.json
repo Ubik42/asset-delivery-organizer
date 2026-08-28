@@ -1,0 +1,22 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 16,
+  "checkpoint": 15,
+  "completedSlice": "M5-S1",
+  "evidence": [
+    "The Chinese desktop now has seven workspaces including visual Profile authoring",
+    "Environment and character presets are versioned and checked against committed strict Profile examples",
+    "Profile import, field validation and save are implemented in a PySide6-independent core and reload through the original CLI loader",
+    "Saving inside the audited delivery root and unapproved overwrite are rejected before mutation; external save is atomic and revalidated",
+    "Applying a changed Profile or enabled-rule selection invalidates stale audit and organization state",
+    "93 automated tests, four immutable demo scenarios, four actual Profile screenshots, Windows Qt lifecycle and clean-wheel profile checks pass",
+    "M5 evidence is documented in docs/M5_PROFILE_WORKSPACE_AUDIT.md"
+  ],
+  "unresolvedRisks": [
+    "The next rule additions must remain explainable from file facts and must not imply DCC scene inspection",
+    "Adding more rules requires the Profile workspace to stay usable rather than becoming a raw JSON editor",
+    "Demo expectations and capabilities must fail on drift as the supported rule set grows"
+  ],
+  "nextSlice": "M6-S1"
+}

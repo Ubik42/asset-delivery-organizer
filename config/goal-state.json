@@ -3,28 +3,28 @@
   "goalId": "asset-delivery-organizer",
   "objective": "Develop the standalone Chinese asset-delivery workbench from 1.0 into a production-ready 1.1 with visual project Profile authoring, deeper deterministic delivery rules, reproducible real-world demos, Windows distribution and public release evidence.",
   "status": "active",
-  "stateRevision": 15,
-  "currentMilestone": "M5",
+  "stateRevision": 16,
+  "currentMilestone": "M6",
   "milestones": [
     {"id": "M0", "status": "completed", "dependencies": [], "outcome": "Ship the read-only audit MVP and its safety evidence."},
     {"id": "M1", "status": "completed", "dependencies": ["M0"], "outcome": "Harden report interoperability and large-delivery behavior."},
     {"id": "M2", "status": "completed", "dependencies": ["M1"], "outcome": "Provide reproducible production-like demo assets and a complete recording tutorial."},
     {"id": "M3", "status": "completed", "dependencies": ["M2"], "outcome": "Ship the interactive read-only delivery review workbench."},
     {"id": "M4", "status": "completed", "dependencies": ["M3"], "outcome": "Ship safe organization, project history and public GitHub release evidence."},
-    {"id": "M5", "status": "in_progress", "dependencies": ["M4"], "outcome": "Let users create, validate, save and reuse versioned project Profiles without editing JSON."},
-    {"id": "M6", "status": "pending", "dependencies": ["M5"], "outcome": "Add evidence-backed deterministic rules for realistic delivery structure and texture sets."},
+    {"id": "M5", "status": "completed", "dependencies": ["M4"], "outcome": "Let users create, validate, save and reuse versioned project Profiles without editing JSON."},
+    {"id": "M6", "status": "in_progress", "dependencies": ["M5"], "outcome": "Add evidence-backed deterministic rules for realistic delivery structure and texture sets."},
     {"id": "M7", "status": "pending", "dependencies": ["M6"], "outcome": "Ship a verified Windows distribution and public 1.1 release evidence."}
   ],
   "nextSlice": {
-    "id": "M5-S1",
-    "milestone": "M5",
-    "outcome": "Implement the versioned Profile authoring core and a Chinese desktop Profile workspace that can create from presets, import, edit, validate and safely save reusable project rules.",
-    "risk": "R2",
+    "id": "M6-S1",
+    "milestone": "M6",
+    "outcome": "Add versioned path.allowed-roots and file.allowed-extensions rules with Profile authoring controls, explainable evidence, realistic immutable demo defects and actual Chinese UI proof.",
+    "risk": "R1",
     "allowedPaths": ["AGENTS.md", "PRODUCT.md", "DESIGN.md", "README.md", "pyproject.toml", "src/", "tests/", "docs/", "demo/", "scripts/", "artifacts/goal/", "config/", "capabilities/", "contracts/", "profiles/"],
-    "nonGoals": ["Modify audited delivery files while editing a Profile", "Build Maya or Unreal scene adapters", "Add topology or material-network claims", "Build cloud accounts, permissions or project management", "Redesign the entire desktop shell"],
-    "acceptance": ["A user can create a Profile from a documented preset without editing JSON", "Existing strict art-delivery-profile/1 files can be imported, edited, validated and saved outside the delivery root", "Invalid rule parameters and duplicate rule activations produce clear Chinese field-level errors and cannot be saved", "Changing the active Profile invalidates stale audit and organization state and requires a new scan", "Profile core behavior is testable without PySide6 and remains compatible with CLI audit loading", "Success, invalid input, safe-save rejection and narrow-window states have deterministic tests and actual Chinese UI screenshots", "README, user guide, demo instructions and capability evidence describe only verified behavior"]
+    "nonGoals": ["Modify audited delivery files", "Inspect DCC scene topology or material networks", "Implement UDIM continuity or duplicate-content rules in this slice", "Build Maya or Unreal adapters", "Add cloud project management"],
+    "acceptance": ["path.allowed-roots@1.0.0 reports files outside configured top-level delivery folders with portable-path evidence", "file.allowed-extensions@1.0.0 reports disallowed file formats using configurable extensions and optional ignored roots", "Both rules are configurable from strict Profile JSON and the Chinese Profile workspace without hand editing", "Issues include rule, affected file, observed value, expected value and Chinese remediation", "Immutable demo scenarios cover valid, wrong-root, disallowed-format, nested-vendor and batch behavior with deterministic expected results", "Auditing all old and new scenarios remains strictly read-only and performance limits still fail before hashing", "Success, filtered issue evidence, invalid rule configuration and narrow-window states have automated tests and actual screenshots", "Contracts, capabilities, README, tutorial and release evidence describe only verified behavior"]
   },
   "validationCommands": [".\\scripts\\goal.ps1 -Action Audit", ".\\scripts\\validate.ps1 -Tier quick", ".\\demo\\run-demo.ps1 -Verify"],
-  "lastCheckpoint": "artifacts/goal/checkpoint-0014.json",
+  "lastCheckpoint": "artifacts/goal/checkpoint-0015.json",
   "guardrails": ["Modify only this repository", "Chinese UI, README, tutorials and screenshot captions are the default deliverables", "Never mutate immutable demo/scenarios fixtures; organization demos operate on generated work copies", "Never execute validationCommands dynamically", "Demo assets are synthetic or license-audited and redistributable", "Every showcase release includes multiple actual-run screenshots covering success, failure, boundary and before/after states", "Auditing remains read-only", "Mutation requires dry-run, collision checks, explicit confirmation, rollback and post-run verification", "Material networks and DCC scene adapters remain out of scope until separately justified"]
 }

@@ -26,6 +26,17 @@
     "rollback_on_failure": true,
     "source_hash_preflight": true
   },
+  "profile_authoring": {
+    "atomic_external_save": true,
+    "invalidates_stale_audit": true,
+    "preset_ids": [
+      "environment-standard",
+      "character-standard"
+    ],
+    "rejects_delivery_root_save": true,
+    "strict_contract_validation": true,
+    "visual_editor": true
+  },
   "rules": [
     {
       "parameters": [

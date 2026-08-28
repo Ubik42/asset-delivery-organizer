@@ -13,7 +13,7 @@ def parser() -> argparse.ArgumentParser:
     value.add_argument("--screenshot", type=Path, help="完成审计后保存界面截图并退出。")
     value.add_argument(
         "--page",
-        choices=("setup", "files", "issues", "organization", "history", "report"),
+        choices=("setup", "profile", "files", "issues", "organization", "history", "report"),
         default="issues",
         help="截图模式要展示的工作区。",
     )
@@ -29,6 +29,16 @@ def parser() -> argparse.ArgumentParser:
         "--simulate-plan-collision",
         action="store_true",
         help="截图自动化专用：将一个目标改为已存在文件，展示冲突拦截。",
+    )
+    value.add_argument(
+        "--simulate-profile-error",
+        action="store_true",
+        help="截图自动化专用：写入无效命名正则，展示字段级校验阻断。",
+    )
+    value.add_argument(
+        "--simulate-profile-save-rejection",
+        action="store_true",
+        help="截图自动化专用：尝试保存到交付目录内，展示安全拒绝且不写入。",
     )
     value.add_argument(
         "--background-smoke",
@@ -84,11 +94,12 @@ def run(argv: list[str] | None = None) -> int:
             window.navigation.setCurrentRow(
                 {
                     "setup": 0,
-                    "files": 1,
-                    "issues": 2,
-                    "organization": 3,
-                    "history": 4,
-                    "report": 5,
+                    "profile": 1,
+                    "files": 2,
+                    "issues": 3,
+                    "organization": 4,
+                    "history": 5,
+                    "report": 6,
                 }[args.page]
             )
             app.processEvents()
@@ -101,6 +112,13 @@ def run(argv: list[str] | None = None) -> int:
         def after_audit() -> None:
             if args.page == "organization" or args.execute_organization:
                 window._generate_organization_plan()
+            if args.simulate_profile_error:
+                window.profile_filename_pattern.setText("[")
+            if args.simulate_profile_save_rejection:
+                try:
+                    window._save_profile_to(args.root / "forbidden-profile.json")
+                except ValueError as exc:
+                    window._set_profile_validation(f"保存被拒绝 · {exc}", "invalid")
             if args.simulate_plan_collision and window.plan_table.rowCount():
                 window.plan_table.item(window.plan_table.rowCount() - 1, 3).setText(
                     "Meshes/SM_BrokenStatue_v004.fbx"

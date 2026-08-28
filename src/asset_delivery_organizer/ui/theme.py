@@ -3,6 +3,9 @@ from __future__ import annotations
 APP_STYLE = """
 * { font-family: "Microsoft YaHei UI", "Microsoft YaHei"; font-size: 13px; }
 QMainWindow, QWidget#AppRoot { background: #101815; color: #E9F0EC; }
+QLabel { color: #E9F0EC; }
+QScrollArea { background: #101815; border: 0; }
+QWidget#ProfileEditor { background: #101815; color: #E9F0EC; }
 QFrame#TopBar { background: #17221D; border-bottom: 1px solid #314239; }
 QLabel#ProductName { font-size: 20px; font-weight: 700; color: #F4F8F5; }
 QLabel#ProductSubtitle, QLabel#Muted { color: #A7B9AF; }
@@ -17,9 +20,13 @@ QLabel#SectionTitle { font-size: 15px; font-weight: 650; color: #EAF3ED; }
 QFrame#Panel, QGroupBox { background: #18231E; border: 1px solid #304139; border-radius: 10px; }
 QGroupBox { margin-top: 14px; padding: 14px 12px 12px 12px; font-weight: 650; }
 QGroupBox::title { subcontrol-origin: margin; left: 10px; padding: 0 5px; color: #DCE9E1; }
-QLineEdit, QComboBox, QTextEdit, QPlainTextEdit { background: #101815; color: #EDF4F0; border: 1px solid #3B5045; border-radius: 7px; padding: 7px 9px; selection-background-color: #397759; }
-QLineEdit:focus, QComboBox:focus, QTextEdit:focus, QPlainTextEdit:focus { border: 1px solid #5DAE82; }
+QLineEdit, QComboBox, QSpinBox, QTextEdit, QPlainTextEdit { background: #101815; color: #EDF4F0; border: 1px solid #3B5045; border-radius: 7px; padding: 7px 9px; selection-background-color: #397759; }
+QLineEdit:focus, QComboBox:focus, QSpinBox:focus, QTextEdit:focus, QPlainTextEdit:focus { border: 1px solid #5DAE82; }
 QLineEdit:disabled { color: #6F8077; background: #151C19; }
+QLineEdit[invalid="true"], QSpinBox[invalid="true"] { border: 1px solid #D87364; background: #211815; }
+QLabel#ProfileValidation { color: #AFC0B6; padding: 7px 10px; border-radius: 7px; }
+QLabel#ProfileValidation[status="valid"] { color: #DDF6E7; background: #234A37; }
+QLabel#ProfileValidation[status="invalid"] { color: #FFD8D1; background: #572A25; }
 QPushButton { background: #26352E; color: #E8F0EB; border: 1px solid #40564A; border-radius: 7px; padding: 8px 14px; font-weight: 600; }
 QPushButton:hover { background: #31463B; }
 QPushButton:pressed { background: #1E2B25; }

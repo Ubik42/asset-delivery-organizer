@@ -41,6 +41,13 @@ def test_manifest_covers_contracts_rules_limits_and_safety() -> None:
     assert manifest.organization.actions == ["rename", "archive"]
     assert manifest.organization.rollback_on_failure is True
     assert manifest.organization.post_audit is True
+    assert manifest.profile_authoring.visual_editor is True
+    assert manifest.profile_authoring.preset_ids == [
+        "environment-standard",
+        "character-standard",
+    ]
+    assert manifest.profile_authoring.rejects_delivery_root_save is True
+    assert manifest.profile_authoring.invalidates_stale_audit is True
     assert {"file.delete", "material-network.write"} <= set(manifest.unsupported)
     assert "file.rename" not in manifest.unsupported
     assert "ui" not in manifest.unsupported

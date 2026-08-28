@@ -1,10 +1,10 @@
-# Versioned contracts
+# 版本化 JSON 合同
 
-These JSON Schemas are generated from the package's strict Pydantic models and checked into this repository so consumers do not need the sibling Art Pipeline Skill at runtime.
+这些 JSON Schema 由严格 Pydantic 模型生成并提交到仓库，使用者不需要在运行时定位兄弟工程。
 
-- `art-delivery-profile.v1.schema.json` accepts the Skill's `art-delivery-profile/1` export.
-- `art-delivery-audit-report.v1.schema.json` describes CLI output `art-delivery-audit-report/1`.
-- `asset-delivery-organization-plan.v1.schema.json` describes reviewed dry-run plans.
-- `asset-delivery-organization-receipt.v1.schema.json` describes completed organization receipts and post-audit identity.
+- `art-delivery-profile.v1.schema.json`：项目 Profile 输入；
+- `art-delivery-audit-report.v1.schema.json`：标准审计报告；
+- `asset-delivery-organization-plan.v1.schema.json`：经过人工审阅的 dry-run 整理计划；
+- `asset-delivery-organization-receipt.v1.schema.json`：整理收据和执行后复检身份。
 
-Regenerate intentionally with `python scripts/export_contract_schemas.py` and `python scripts/export_organization_schemas.py`. The fixed validation entrypoint uses `--check` and fails when models and checked-in contracts drift.
+有意修改合同时运行 `python scripts/export_contract_schemas.py` 和 `python scripts/export_organization_schemas.py`。固定验证入口使用 `--check`，模型与已提交 Schema 不一致时会失败。

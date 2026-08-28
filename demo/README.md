@@ -31,6 +31,8 @@
 
 工具会把 `02_supplier_drop_with_issues` 复制到被 Git 忽略的 `work/organization-demo/supplier-drop`，逐文件验证 SHA-256，并把 `work/organization-demo/output` 作为外部归档/收据目录。整理演示不得直接操作 `demo/scenarios`。详细步骤见 [VIDEO_TUTORIAL.md](../docs/VIDEO_TUTORIAL.md)。
 
+“项目规则”工作区直接复用这四组合法合成素材：先导入 `profiles/atlas.environment.delivery.json` 展示真实项目配置，再从环境/角色模板新建草稿。模板示例位于 `profiles/presets`，自动测试会校验其与运行时模板没有漂移。
+
 ## 一键自动验证
 
 在仓库根目录运行：

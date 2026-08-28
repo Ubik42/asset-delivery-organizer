@@ -16,14 +16,15 @@ cd D:\3D\_tools\asset-delivery-organizer
 
 ## 界面主线
 
-1. `work/organization-demo/supplier-drop`：三条规则全开，预期 12/5；
-2. 问题审查：依次展示旧版本、错误命名、缺失贴图；
-3. 文件浏览：选择贴图、仅有问题，搜索 `BrokenStatue`；
-4. `01_clean_environment_delivery`：预期 16/0；
-5. `03_multi_asset_udim_batch`：预期 58/0；
-6. 整理方案：3 项操作、2 项缺失依赖；演示目标冲突被禁用；
-7. 批准执行后：预期 10/2，历史中出现 3 项操作的外部收据；
-8. 报告导出：先演示输入目录内被拒绝，再保存到 `work\organization-demo\output`。
+1. 项目规则：环境/角色模板、无效正则阻断、另存到交付目录之外；
+2. `work/organization-demo/supplier-drop`：三条规则全开，预期 12/5；
+3. 问题审查：依次展示旧版本、错误命名、缺失贴图；
+4. 文件浏览：选择贴图、仅有问题，搜索 `BrokenStatue`；
+5. `01_clean_environment_delivery`：预期 16/0；
+6. `03_multi_asset_udim_batch`：预期 58/0；
+7. 整理方案：3 项操作、2 项缺失依赖；演示目标冲突被禁用；
+8. 批准执行后：预期 10/2，历史中出现 3 项操作的外部收据；
+9. 报告导出：先演示输入目录内被拒绝，再保存到 `work\organization-demo\output`。
 
 ## 干净交付
 

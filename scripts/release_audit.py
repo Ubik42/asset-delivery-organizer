@@ -14,6 +14,12 @@ from asset_delivery_organizer.organization import (
     execute_organization_plan,
     generate_organization_plan,
 )
+from asset_delivery_organizer.profile_authoring import (
+    ProfileFieldError,
+    build_profile,
+    preset_by_id,
+    save_profile,
+)
 
 REPO = Path(__file__).resolve().parents[1]
 
@@ -73,6 +79,18 @@ def main() -> int:
             "version.latest-only",
         }
         capabilities = current_capabilities()
+        authored_profile = build_profile(preset_by_id("environment-standard").draft)
+        authored_target = workspace / "profiles" / "environment.json"
+        saved_profile, saved_digest = save_profile(
+            authored_profile, authored_target, audited_root=delivery
+        )
+        reloaded_profile, reloaded_digest = load_profile(saved_profile)
+        forbidden_profile = delivery / "forbidden-profile.json"
+        profile_root_rejected = False
+        try:
+            save_profile(authored_profile, forbidden_profile, audited_root=delivery)
+        except ProfileFieldError:
+            profile_root_rejected = not forbidden_profile.exists()
         organization_output = workspace / "organization-output"
         plan = generate_organization_plan(report, delivery, organization_output)
         profile, _ = load_profile(REPO / "profiles" / "atlas.environment.delivery.json")
@@ -96,6 +114,12 @@ def main() -> int:
                 and capabilities.organization.rollback_on_failure
                 and capabilities.organization.post_audit
             ),
+            "profile_authoring_clean_install": (
+                reloaded_profile == authored_profile
+                and saved_digest == reloaded_digest
+                and capabilities.profile_authoring.visual_editor
+            ),
+            "profile_save_inside_delivery_rejected": profile_root_rejected,
         }
         if not all(checks.values()):
             raise RuntimeError(f"release audit checks failed: {checks}")

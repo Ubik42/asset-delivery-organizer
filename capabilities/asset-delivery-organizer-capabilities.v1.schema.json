@@ -90,6 +90,54 @@
       "title": "OrganizationCapabilities",
       "type": "object"
     },
+    "ProfileAuthoringCapabilities": {
+      "additionalProperties": false,
+      "properties": {
+        "atomic_external_save": {
+          "const": true,
+          "default": true,
+          "title": "Atomic External Save",
+          "type": "boolean"
+        },
+        "invalidates_stale_audit": {
+          "const": true,
+          "default": true,
+          "title": "Invalidates Stale Audit",
+          "type": "boolean"
+        },
+        "preset_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "title": "Preset Ids",
+          "type": "array"
+        },
+        "rejects_delivery_root_save": {
+          "const": true,
+          "default": true,
+          "title": "Rejects Delivery Root Save",
+          "type": "boolean"
+        },
+        "strict_contract_validation": {
+          "const": true,
+          "default": true,
+          "title": "Strict Contract Validation",
+          "type": "boolean"
+        },
+        "visual_editor": {
+          "const": true,
+          "default": true,
+          "title": "Visual Editor",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "preset_ids"
+      ],
+      "title": "ProfileAuthoringCapabilities",
+      "type": "object"
+    },
     "RuleCapability": {
       "additionalProperties": false,
       "properties": {
@@ -305,6 +353,9 @@
     "organization": {
       "$ref": "#/$defs/OrganizationCapabilities"
     },
+    "profile_authoring": {
+      "$ref": "#/$defs/ProfileAuthoringCapabilities"
+    },
     "rules": {
       "items": {
         "$ref": "#/$defs/RuleCapability"
@@ -353,6 +404,7 @@
     "scan",
     "safety",
     "organization",
+    "profile_authoring",
     "unsupported"
   ],
   "title": "CapabilityManifest",

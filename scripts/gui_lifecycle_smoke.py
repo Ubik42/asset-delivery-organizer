@@ -67,6 +67,11 @@ def main() -> int:
         type=Path,
         default=REPO / "docs" / "evidence" / "gui-lifecycle-1.0.0.json",
     )
+    parser.add_argument(
+        "--page",
+        choices=("setup", "profile", "files", "issues", "organization", "history", "report"),
+        default="files",
+    )
     args = parser.parse_args()
     before = python_pids()
     runs = []
@@ -85,7 +90,7 @@ def main() -> int:
                 "--root",
                 str(REPO / "demo" / "scenarios" / "01_clean_environment_delivery"),
                 "--page",
-                "files",
+                args.page,
                 "--background-smoke",
                 "--screenshot",
                 str(screenshot),
@@ -131,6 +136,7 @@ def main() -> int:
         "python": sys.version.split()[0],
         "window_backend": "windows",
         "focus_policy": "show-without-activating-and-offscreen-position",
+        "page": args.page,
         "existing_python_pids_before": sorted(before),
         "existing_python_pids_missing_after": missing_existing,
         "runs": runs,

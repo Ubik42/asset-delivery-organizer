@@ -12,6 +12,7 @@ pytest.importorskip("PySide6")
 from PySide6.QtCore import QEventLoop, QSettings, QTimer
 from PySide6.QtWidgets import QApplication
 
+from asset_delivery_organizer.profile_authoring import ProfileFieldError
 from asset_delivery_organizer.ui.main_window import MainWindow
 
 
@@ -48,9 +49,49 @@ def test_workbench_closes_read_only_golden_path(
     assert window.issues_table.rowCount() == 0
     assert window.export_button.isEnabled()
     assert window.generate_plan_button.isEnabled()
-    assert window.navigation.count() == 6
+    assert window.navigation.count() == 7
     assert "输入写入：0" in window.report_summary.toPlainText()
     assert _snapshot(valid_delivery) == before
+    window.close()
+
+
+def test_profile_workspace_saves_applies_invalidates_and_blocks_bad_fields(
+    profile_file: Path, valid_delivery: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("ADO_DATA_DIR", str(tmp_path / "ui-data"))
+    _app = QApplication.instance() or QApplication([])
+    QSettings("AIToolTA", "AssetDeliveryOrganizer").clear()
+    window = MainWindow()
+    window.configure(profile_path=profile_file, delivery_root=valid_delivery)
+
+    loop = QEventLoop()
+    window.audit_ready.connect(loop.quit)
+    QTimer.singleShot(10_000, loop.quit)
+    window.start_audit()
+    loop.exec()
+    assert window.report is not None
+
+    window.profile_version_edit.setText("1.0.1")
+    assert window.profile_draft is not None
+    assert window.save_profile_button.isEnabled()
+    destination = tmp_path / "saved-profiles" / "atlas.json"
+    assert window._save_profile_to(destination) == destination
+    assert destination.is_file()
+    assert window.profile_path == destination
+    assert window.report is None
+    assert not window.export_button.isEnabled()
+    assert "失效" in window.status_message.text()
+
+    window.profile_filename_pattern.setText("[")
+    assert window.profile_draft is None
+    assert not window.save_profile_button.isEnabled()
+    assert "模型命名正则" in window.profile_validation.text()
+
+    window.profile_filename_pattern.setText(r"^SM_[A-Za-z0-9]+_v[0-9]{3}$")
+    forbidden = valid_delivery / "profile.json"
+    with pytest.raises(ProfileFieldError, match="交付目录之外"):
+        window._save_profile_to(forbidden)
+    assert not forbidden.exists()
     window.close()
 
 

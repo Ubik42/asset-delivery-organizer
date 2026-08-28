@@ -6,6 +6,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from .audit import SCANNER_ID, SCANNER_VERSION
+from .profile_authoring import PROFILE_PRESETS
 from .rules import SUPPORTED_RULES
 from .scanner import ScanLimits
 
@@ -67,6 +68,15 @@ class OrganizationCapabilities(StrictCapability):
     external_receipt: Literal[True] = True
 
 
+class ProfileAuthoringCapabilities(StrictCapability):
+    visual_editor: Literal[True] = True
+    preset_ids: list[str] = Field(min_length=1)
+    strict_contract_validation: Literal[True] = True
+    atomic_external_save: Literal[True] = True
+    rejects_delivery_root_save: Literal[True] = True
+    invalidates_stale_audit: Literal[True] = True
+
+
 class CapabilityManifest(StrictCapability):
     schema_id: Literal["asset-delivery-organizer-capabilities/1"]
     tool_id: Literal["asset-delivery-organizer"]
@@ -78,6 +88,7 @@ class CapabilityManifest(StrictCapability):
     scan: ScanCapabilities
     safety: SafetyCapabilities
     organization: OrganizationCapabilities
+    profile_authoring: ProfileAuthoringCapabilities
     unsupported: list[str] = Field(min_length=1)
 
     @model_validator(mode="after")
@@ -136,6 +147,9 @@ def current_capabilities() -> CapabilityManifest:
         ),
         safety=SafetyCapabilities(input_mode="read-only-audit-approved-organization"),
         organization=OrganizationCapabilities(actions=["rename", "archive"]),
+        profile_authoring=ProfileAuthoringCapabilities(
+            preset_ids=[item.preset_id for item in PROFILE_PRESETS]
+        ),
         unsupported=[
             "dcc-adapter.execute",
             "file.delete",
