@@ -1,0 +1,22 @@
+{
+  "schema": "codex-goal-checkpoint/1",
+  "goalId": "asset-delivery-organizer",
+  "stateRevision": 18,
+  "checkpoint": 17,
+  "completedSlice": "M7-S1",
+  "evidence": [
+    "Version 1.1.0 is consistent across project metadata, Python package, capability manifest, Windows ProductVersion, CLI output and Chinese UI",
+    "The Windows x64 portable ZIP starts outside the repository with Python environment variables cleared and no system Python runtime dependency",
+    "Five packaged scenarios preserve 109 immutable files and reproduce their expected rule and issue counts",
+    "Packaged safe organization plans and executes three approved operations on a generated copy, then reports two unresolved texture issues",
+    "Two real packaged Qt GUI runs close only their owned PIDs and preserve pre-existing process state",
+    "A seeded 1.0 history database remains readable and is stored outside application and delivery directories",
+    "106 tests, Ruff, goal audit, clean wheel audit, portable verification, five-scenario verification and repository secret scan pass",
+    "GitHub main and public v1.1.0 Release expose verified ZIP and wheel SHA-256 digests"
+  ],
+  "unresolvedRisks": [
+    "The Windows distribution is not commercially code-signed and may display an unknown-publisher warning",
+    "DCC scene internals, material networks, format conversion and cloud project management remain intentionally unsupported"
+  ],
+  "nextSlice": null
+}
